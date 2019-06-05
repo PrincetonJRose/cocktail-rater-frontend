@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 
-export default class Login extends Component {
+export default class Ingredients extends Component {
     constructor() {
         super()
-        this.state = {
-        
-        }
     }
 
-    render() {
+    render () {
         return (
             <div></div>
         )
