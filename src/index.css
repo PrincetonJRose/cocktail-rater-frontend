@@ -9,8 +9,8 @@ body {
   background-size: cover;
 }
 
-.bgImg {
-
+.center-screen {
+  margin: 0 auto;
 }
 
 code {

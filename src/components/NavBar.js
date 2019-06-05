@@ -3,10 +3,6 @@ import { Link } from 'react-router-dom'
 import { Search } from 'semantic-ui-react'
 
 export default class NavBar extends Component {
-    constructor() {
-        super()
-    }
-    
     render() {
         const menuClasses = `ui inverted pink menu`
         const iconClasses = `icon cocktail`
@@ -17,7 +13,7 @@ export default class NavBar extends Component {
                     <h2 className="ui header">
                         <i className={iconClasses}></i>
                         <div className="content">Cocktail Rater</div>
-                        <div className="sub header">Come taste and rate!</div>
+                        <div className="sub header">Come taste, then rate!</div>
                     </h2>
                     </Link>
                     <div className="center menu">
