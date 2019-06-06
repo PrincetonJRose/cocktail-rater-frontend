@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+import NavBar from './components/NavBar'
+import Login from './components/Login'
+import Cocktails from './components/Cocktails'
+import Ingredients from './components/Ingredients'
+import Homepage from './components/Homepage'
+import Register from './components/Register'
+import { Switch, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <div className="App" style={{ backgroundImage: `url(./Cocktail-Backgrounds/pink-cocktail-background.jpg)`, backgroundSize: `cover`, backgroundRepeat: `no-repeat`, backgroundPosition: `center`, width: `100vw`, height: `100vh`}}>
+        <NavBar />
+        <Switch>
+          <Route path="/cocktails" component={Cocktails} />
+          <Route path="/ingredients" component={Ingredients} />
+          <Route path="/login" component={Login} />
+          <Route path="/" component={Homepage} />
+          <Route path="/register" component={Register} />
+        </Switch>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default connect()(App)

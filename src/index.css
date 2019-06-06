@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url(./Cocktail-Backgrounds/pink-cocktail-background.jpg);
+  background-size: cover;
+}
+
+.center-screen {
+  margin: 0 auto;
 }
 
 code {
