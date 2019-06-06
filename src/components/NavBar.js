@@ -13,10 +13,10 @@ export default class NavBar extends Component {
                     <h2 className="ui header">
                         <i className={iconClasses}></i>
                         <div className="content">Cocktail Rater</div>
-                        <div className="sub header">Come taste, then rate!</div>
+                        <div className="sub header">Come to taste. Come to rate.</div>
                     </h2>
                     </Link>
-                    <div className="center menu">
+                    <div className="middle menu">
                         <Link to="/cocktails" className="item" style={{ color: 'black' }} >
                         <div className="content">Cocktails</div>
                         </Link>

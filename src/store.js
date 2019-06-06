@@ -1,10 +1,12 @@
 import { createStore, combineReducers } from 'redux'
 import cocktailReducer from './reducers/cocktailReducer'
 import ingredientReducer from './reducers/ingredientReducer'
+import userReducer from './reducers/userReducer'
 
-const rootReducer = combineReducers({
+const mainReducer = combineReducers({
     cocktails: cocktailReducer,
-    ingredient: ingredientReducer
+    ingredients: ingredientReducer,
+    users: userReducer
 })
 
-export default createStore(rootReducer)
+export default createStore(mainReducer)

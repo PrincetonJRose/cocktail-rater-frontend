@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Form, Button, Input, Checkbox, Radio, Message } from 'semantic-ui-react'
+import { Form, Button, Message, Grid, Segment, Header } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 export default class Login extends Component {
     constructor() {
@@ -10,8 +11,7 @@ export default class Login extends Component {
             errors: [],
         }
     }
-    
-    
+
     handleSubmit =(e)=> {
         e.preventDefault()
         fetch("http://localhost:3000/login", {
@@ -20,7 +20,8 @@ export default class Login extends Component {
             "Content-Type": "application/json",
             },
             body: JSON.stringify(this.state)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
         .then(data => {
             if (data.errors) {
                 this.setState({ errors: data.errors })
@@ -29,47 +30,47 @@ export default class Login extends Component {
                 this.props.history.push("/")
             }
         })
-    }
-
-    displayErrors =()=> {
-        if (this.state.errors.length > 0) {
-            return (
-            <div className='form-errors'>
-                <h3>Form Errors</h3>
-                <ul>
-                { this.state.errors.map(msg => <p style={{ color: `black` }}><b>{msg}</b></p>) }
-                </ul>
-            </div>
-            )
-        } else {
-            return null;
-        }
+        e.target.reset()
     }
 
     render =()=>
-        <form className="ui form" onSubmit={this.handleSubmit} style={{ width: `25%`, display: `inline-block`, margin: `auto auto` }} >
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            { this.displayErrors() }
-            <div className="field">
-                <label><h2>Email:</h2></label>
-                <input type="text" name="email" placeholder="Email..."
-                onChange={(e) => this.setState({ email: e.target.value })} required />
-            </div>
-            <div className="field">
-                <label><h2>Password:</h2></label>
-                <input type="password" name="password" placeholder="Password..."
-                onChange={(e) => this.setState({ password: e.target.value })} required />
-            </div>
-            <button className="ui button" type="submit">Submit</button>
-        </form>
+        <Grid textAlign='center' style={{ height: '90vh' }} verticalAlign='middle' >
+                <Grid.Column style={{ maxWidth: 450 }}>
+                    <Header as='h2' color='black' textAlign='center'>
+                    <i className="icon cocktail"></i> Enter Account Information
+                    </Header>
+                    <Form size='large' onSubmit={this.handleSubmit} error>
+                        <Segment stacked>
+                        {this.state.errors.map( error => {
+                            return <Message error content={error}/>
+                        })}
+                        <Form.Input 
+                            fluid 
+                            icon='user' 
+                            type="text" 
+                            name="email" 
+                            iconPosition='left' 
+                            placeholder='Email...' 
+                            required  
+                            onChange={(e) => this.setState({ email: e.target.value })}
+                        />
+                        <Form.Input
+                            fluid
+                            icon='lock'
+                            iconPosition='left'
+                            placeholder='Password...'
+                            type='password'
+                            required
+                            onChange={(e) => this.setState({ password: e.target.value })}
+                        />
+                        <Button color='pink' fluid size='large' type="submit">
+                            Login
+                        </Button>
+                        </Segment>
+                        <Message>
+                            New to the site? Click <Link to="/register"><span>here</span></Link> to sign up!
+                        </Message>
+                    </Form>
+            </Grid.Column>
+        </Grid>
 }
