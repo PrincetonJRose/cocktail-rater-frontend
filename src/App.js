@@ -6,6 +6,7 @@ import Login from './components/Login'
 import Cocktails from './components/Cocktails'
 import Ingredients from './components/Ingredients'
 import Homepage from './components/Homepage'
+import Register from './components/Register'
 
 export default class App extends Component {
   render() {
@@ -17,6 +18,7 @@ export default class App extends Component {
           <Route path="/ingredients" component={Ingredients} />
           <Route path="/login" component={Login} />
           <Route path="/" component={Homepage} />
+          <Route path="/register" component={Register} />
         </Switch>
       </div>
     )
