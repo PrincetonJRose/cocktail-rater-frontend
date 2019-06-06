@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 class App extends Component {
   render() {
     return (
-      <div className="App" style={{ backgroundImage: `url(./Cocktail-Backgrounds/pink-cocktail-background.jpg)`, backgroundSize: `cover`, backgroundRepeat: `no-repeat`, backgroundPosition: `center`, width: `100vw`, height: `100vh`}}>
+      <div className="App" className="container" style={{ backgroundImage: `url(./Cocktail-Backgrounds/pink-cocktail-background.jpg)`, backgroundSize: `cover`, backgroundRepeat: `no-repeat`, backgroundPosition: `center`, width: `100vw`, height: `100vh`, overflow: `hidden`}}>
         <NavBar />
         <Switch>
           <Route path="/cocktails" component={Cocktails} />
