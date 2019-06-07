@@ -44,4 +44,20 @@ export function getUser(id) {
             .then(res => res.json())
 }
 
+export function getLocal() {
+    return fetch(localUrl)
+            .then(res => res.json())
+}
 
+export function createUser(userInfo) {
+    return fetch(usersUrl, {
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify(userInfo)
+        })
+        .catch(errors => console.log(errors))
+        .then(res => res.json())
+}
