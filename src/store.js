@@ -9,4 +9,4 @@ const mainReducer = combineReducers({
     users: userReducer
 })
 
-export default createStore(mainReducer)
+export default createStore(mainReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())

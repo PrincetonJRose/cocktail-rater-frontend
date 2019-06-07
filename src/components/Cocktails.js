@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import CocktailInfo from './CocktailInfo'
 
-export default class Cocktails extends Component {
+class Cocktails extends Component {
 
     render() {
         return (
             <div className="container">
-                <div className="container" style={{ width: `75vw`, height: `100vh`, float: `right` }}>
-                    <div className="container" style={{ height: `60vh`, overflowY: `auto`, overflowX: `hidden` }}>
-                        Cocktail info
-                    </div>
-                    <div className="container" style={{ height: `40vh`, overflowY: `auto`, overflowX: `hidden` }}>
-                        Reviews
+                <div className="container" style={{ width: `70vw`, height: `100vh`, float: `right` }}>
+                    <div className="container" style={{ height: `100vh`, overflowY: `auto`, overflowX: `hidden` }}>
+                        { this.props.cocktail ?
+                            <CocktailInfo id={this.props.cocktail}/>
+                            :
+                            null
+                        }
                     </div>
                 </div>
-                <div className="container" style={{ width: `25vw`, height: `100vh`, float: `left` }}>
+                <div className="container" style={{ width: `30vw`, height: `100vh`, float: `left` }}>
                     <div style={{ overflowX: `hidden`, overflowY: `auto`, height: `65vh` }}>
                         Cocktails
                     </div>
@@ -25,3 +28,5 @@ export default class Cocktails extends Component {
         )
     }
 }
+
+export default connect()(Cocktails)
