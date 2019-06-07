@@ -1,0 +1,16 @@
+#full-fit {
+    width: 100%;
+    height: 92%;
+}
+
+#center-text {
+    text-align: center;
+}
+
+#cocktails-box {
+    overflow-y: auto;
+    border-style: groove;
+    border-radius: 15px;
+    height: 84%;
+    max-height: 85%;
+}
