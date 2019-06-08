@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Button, Message, Grid, Segment, Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-export default class Login extends Component {
+class Login extends Component {
     constructor() {
         super()
         this.state = {
@@ -29,6 +30,7 @@ export default class Login extends Component {
                 localStorage.setItem("jwt_user", data.jwt_user)
                 this.props.history.push("/")
             }
+            
         })
         e.target.reset()
     }
@@ -74,3 +76,5 @@ export default class Login extends Component {
             </Grid.Column>
         </Grid>
 }
+
+export default connect()(Login)

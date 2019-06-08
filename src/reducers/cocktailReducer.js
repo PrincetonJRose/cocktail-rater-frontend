@@ -10,6 +10,11 @@ export default (state = { api_cocktails: [], custom_cocktails: [], cocktail: nul
                 ...state, custom_cocktails: action.cocktailData
             }
         }
+        case "SET_COCKTAIL": {
+            return {
+                ...state, cocktail: action.cocktailData
+            }
+        }
         default: return state
     }
 }

@@ -29,7 +29,10 @@ export default class NavBar extends Component {
                         {
                         localStorage.getItem("jwt_user") ?
                         <Link to="/" className="item" style={{ color: 'black' }}
-                                onClick={(e) => localStorage.clear() } >
+                                onClick={(e) => {
+                                    localStorage.clear()
+                                    
+                                    }} >
                                 <div className="content">Logout</div>
                         </Link> 
                         :
