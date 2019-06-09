@@ -28,15 +28,15 @@ class Login extends Component {
                 this.setState({ errors: data.errors })
             } else {
                 localStorage.setItem("jwt_user", data.jwt_user)
+                this.props.dispatch({ type: "SET_AUTH" })
                 this.props.history.push("/")
             }
-            
         })
         e.target.reset()
     }
 
     render =()=>
-        <Grid textAlign='center' style={{ height: '90vh' }} verticalAlign='middle' >
+        <Grid textAlign='center' style={{ height: '90%' }} verticalAlign='middle' >
                 <Grid.Column style={{ maxWidth: 450 }}>
                     <Header as='h2' color='black' textAlign='center'>
                     <i className="icon cocktail"></i> Enter Account Information

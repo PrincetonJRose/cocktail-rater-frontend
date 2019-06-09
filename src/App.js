@@ -16,6 +16,9 @@ class App extends Component {
     getApiCocktails().then(apiData => this.props.dispatch({ type: "SET_API_DATA", apiData: apiData }))
     getIngredients().then(ingredientData => this.props.dispatch({ type: "SET_INGREDIENTS", ingredientData: ingredientData }))
     getCocktails().then(cocktailData => this.props.dispatch({ type: "SET_COCKTAILS", cocktailData: cocktailData }))
+    if (localStorage.getItem("jwt_user")) {
+      this.props.dispatch({ type: "SET_AUTH" })
+    }
   }
 
   render() {

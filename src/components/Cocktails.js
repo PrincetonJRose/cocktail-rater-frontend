@@ -9,7 +9,7 @@ import { getApiCocktail } from '../services/APICalls'
 class Cocktails extends Component {
     constructor() {
         super()
-        this.state = { cocktail: null, filter: '', results: [] }
+        this.state = { cocktail: null, filter: '' }
     }
 
     filterCocktails =()=> {

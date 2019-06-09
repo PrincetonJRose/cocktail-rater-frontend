@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Search } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
-export default class NavBar extends Component {
+class NavBar extends Component {
     render() {
         const menuClasses = `ui inverted pink menu`
         const iconClasses = `icon cocktail`
@@ -27,11 +28,11 @@ export default class NavBar extends Component {
                     <div className="right menu">
                         <Search placeholder="Search..." className="item"/>
                         {
-                        localStorage.getItem("jwt_user") ?
+                        this.props.jwt_user ?
                         <Link to="/" className="item" style={{ color: 'black' }}
                                 onClick={(e) => {
                                     localStorage.clear()
-                                    
+                                    this.props.dispatch({ type: "CLEAR_AUTH" })
                                     }} >
                                 <div className="content">Logout</div>
                         </Link> 
@@ -46,3 +47,11 @@ export default class NavBar extends Component {
         )
     }
 }
+
+let mapStateToProps =(state)=> {
+    return {
+        jwt_user: state.users.jwt_user
+    }
+}
+
+export default connect(mapStateToProps)(Navbar)
