@@ -17,3 +17,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+#root {
+  background-image: url(./Cocktail-Backgrounds/pink-cocktail-background.jpg); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Image, Grid, GridRow, GridColumn, Menu, SegmentGroup } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 class CocktailInfo extends Component {
     
@@ -20,12 +21,16 @@ class CocktailInfo extends Component {
             }
             ingredients.push(ing)
         }
-        console.log(ingredients)
+
         return (
             <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
                 <GridRow centered>
-                    <GridColumn textAlign="centered" centered><h1><u>{c.name}</u></h1></GridColumn>
-                    
+                    <GridColumn textAlign="centered" centered width={8}>
+                        <p></p>
+                        <Segment inverted color="black">
+                            <h1><u>{c.name}</u></h1>
+                        </Segment>
+                    </GridColumn>
                 </GridRow>
                 <GridRow stretched centered >
                     <GridColumn width={7}>
@@ -39,6 +44,7 @@ class CocktailInfo extends Component {
                             <Menu.Item><b><u>Video</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
                             <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length}</Menu.Item>
                             <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
+                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + c.likes.length}</Menu.Item>
                         </Menu>
                     </Segment>
                 </GridRow>
@@ -48,8 +54,8 @@ class CocktailInfo extends Component {
                             <h3 style={{ textAlign: `center` }}><b><u>What's required</u></b></h3>
                             <table border="1" style={{ width: `100%`, borderStyle: `dotted` }}>
                                 <tr>
-                                    <th style={{ textAlign:`center`, width:"50%" }}>Ingredient:</th>
-                                    <th style={{ textAlign:`center`, width:"50%" }}>Measurement:</th>
+                                    <th style={{ textAlign:`center`, width:"50%" }}>Ingredients:</th>
+                                    <th style={{ textAlign:`center`, width:"50%" }}>Measurements:</th>
                                 </tr>
                                 {
                                     ingredients.map( i => { 
@@ -63,29 +69,43 @@ class CocktailInfo extends Component {
                                 }
                             </table>
                             <h3 style={{ textAlign: `center` }}><b><u>How to create</u></b></h3>
-                            <div>{c.instructions}</div>
+                            <p>{c.instructions}</p>
                         </Segment>
                     </GridColumn>
                 </GridRow>
-                <GridRow centered>
-                    <GridColumn width={12} >
-                        <Segment inverted color="black" >
-                        </Segment>
-                    </GridColumn>
-                </GridRow>
+                {
+                    this.props.jwt_user ?
+                        <GridRow centered>
+                            <GridColumn width={12} >
+                                <Segment inverted color="black" >
+                                <h3 style={{ textAlign: `center` }}><b><u>Reviews</u>:</b></h3>
+                                    {
+                                        c.reviews.map( review => {
+                                            return null
+                                        })
+                                    }
+                                </Segment>
+                            </GridColumn>
+                        </GridRow>
+                    :
+                        <GridRow centered>
+                            <GridColumn width={12} >
+                                <Segment inverted color="black" >
+                                    <h3 style={{ textAlign: `center` }}><b>To see and write reviews you must be <Link to="/login" >logged</Link> in.</b></h3>
+                                    <h3 style={{ textAlign: `center` }}><b>Don't have an account? You can click  <Link to="/register" >here</Link> to create one.</b></h3>
+                                </Segment>
+                            </GridColumn>
+                        </GridRow>
+                }
             </Grid>
         )
     }
 }
-    export default connect()(CocktailInfo)
 
-    // <div className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
-    //     <h1 style={{ textAlign: `center` }}>{c.name}</h1>
-    //     <div>
-    //         <Image className="ui medium image" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ float: `left`, borderStyle: `groove` }}/>
-    //         <div style={{  }}>
-    //             <li><b>{c.alcoholic} bevarage</b></li>
-    //             <li><b><u>Category</u>: {c.category}</b></li>
-    //         </div>
-    //     </div>
-    // </div>
+let mapStateToProps =(state)=> {
+    return {
+        jwt_user: state.users.jwt_user
+    }
+}
+
+export default connect(mapStateToProps)(CocktailInfo)

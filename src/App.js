@@ -7,7 +7,7 @@ import Ingredients from './components/Ingredients'
 import Homepage from './components/Homepage'
 import Register from './components/Register'
 import Mainpage from './components/Mainpage'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getApiCocktails, getIngredients, getCocktails } from './services/APICalls'
 
@@ -24,15 +24,22 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App container" style={{ backgroundImage: `url(./Cocktail-Backgrounds/pink-cocktail-background.jpg)`, backgroundSize: `cover`, backgroundRepeat: `no-repeat`, backgroundPosition: `center`, width: `100vw`, height: `100vh`, overflow: `hidden`}}>
+      <div className="App container" style={{ width: `100vw`, height: `100vh`, overflow: `hidden`}}>
         <NavBar />
         <Switch>
-          <Route path="/cocktails" component={Cocktails} />
-          <Route path="/ingredients" component={Ingredients} />
-          <Route path="/login" component={Login} />
-          <Route path="/home" component={Homepage} />
-          <Route path="/register" component={Register} />
-          <Route path="/" component={Mainpage} />
+          <Route exact path="/cocktails/*" component={Cocktails} />
+          <Route exact path="/cocktails" component={Cocktails} />
+          {/* <Route exact path="/cocktails/" render={()=>(
+                                              this.props.cocktail ? (
+                                                <Redirect to={'/cocktails/' + this.props.cocktail.id}/>
+                                                ):(
+                                                <Cocktails/>))}/> */}
+          <Route exact path="/ingredients/*" component={Ingredients} />
+          <Route exact path="/ingredients" component={Ingredients} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/home" component={Homepage} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/" component={Mainpage} />
         </Switch>
       </div>
     )
@@ -41,7 +48,8 @@ class App extends Component {
 
 let mapStateToProps =(state)=> {
   return {
-    jwt_user: state.jwt_user
+    jwt_user: state.users.jwt_user,
+    cocktail: state.cocktails.cocktail
   }
 }
 
