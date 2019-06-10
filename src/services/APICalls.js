@@ -1,5 +1,5 @@
 const localUrl = `http://localhost:3000/`
-const cocktailsUrl = `http://localhost:3000/cocktails`
+const cocktailsUrl = `http://localhost:3000/cocktails/`
 const ingredientsUrl = `http://localhost:3000/ingredients/`
 const apiCocktailsUrl = `http://localhost:3000/api_cocktail_infos/`
 const usersUrl = `http://localhost:3000/users/`

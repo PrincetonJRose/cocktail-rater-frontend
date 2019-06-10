@@ -9,18 +9,27 @@ class CocktailInfo extends Component {
     render() {
         const c = this.props.cocktail
         let ingredients = []
-        for (let i = 1; i < 16; i++) {
-            let ing = {}
-            if (c[`ingredient_${i}`] == '' || c[`ingredient_${i}`] == ' ' || c[`ingredient_${i}`] == null) {
-                break
+        if (this.props.cocktail.api_cocktail_id) {
+            for (let i = 1; i < 16; i++) {
+                let ing = {}
+                if (c[`ingredient_${i}`] == '' || c[`ingredient_${i}`] == ' ' || c[`ingredient_${i}`] == null) {
+                    break
+                }
+                ing.ingredient = c[`ingredient_${i}`]
+                if (c[`measurement_${i}`] == '' || c[`measurement_${i}`] == ' ' || c[`measurement_${i}`] == null) {
+                    ing.measurement = "No measurement given."
+                } else {
+                    ing.measurement = c[`measurement_${i}`]
+                }
+                ingredients.push(ing)
             }
-            ing.ingredient = c[`ingredient_${i}`]
-            if (c[`measurement_${i}`] == '' || c[`measurement_${i}`] == ' ' || c[`measurement_${i}`] == null) {
-                ing.measurement = "No measurement given."
-            } else {
-                ing.measurement = c[`measurement_${i}`]
+        } else {
+            for (let i=0; i < c.ingredients.length; i++) {
+                let ing = {}
+                ing.ingredient = c.ingredients[i].name
+                ing.measurement = c.cocktail_ingredients[i].measurement
+                ingredients.push(ing)
             }
-            ingredients.push(ing)
         }
 
         return (
