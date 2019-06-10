@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Image, Grid, GridRow, GridColumn, Menu, SegmentGroup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import Reviews from './Reviews'
 
 class CocktailInfo extends Component {
     
@@ -80,9 +81,7 @@ class CocktailInfo extends Component {
                                 <Segment inverted color="black" >
                                 <h3 style={{ textAlign: `center` }}><b><u>Reviews</u>:</b></h3>
                                     {
-                                        c.reviews.map( review => {
-                                            return null
-                                        })
+                                        <Reviews c={c}/>
                                     }
                                 </Segment>
                             </GridColumn>
@@ -91,8 +90,8 @@ class CocktailInfo extends Component {
                         <GridRow centered>
                             <GridColumn width={12} >
                                 <Segment inverted color="black" >
-                                    <h3 style={{ textAlign: `center` }}><b>To see and write reviews you must be <Link to="/login" >logged</Link> in.</b></h3>
-                                    <h3 style={{ textAlign: `center` }}><b>Don't have an account? You can click  <Link to="/register" >here</Link> to create one.</b></h3>
+                                    <h3 style={{ textAlign: `center` }}><b>To see and write reviews you must be <Link to="/login" ><u>logged</u></Link> in.</b></h3>
+                                    <h3 style={{ textAlign: `center` }}><b>Don't have an account? You can click  <Link to="/register" ><u>here</u></Link> to create one.</b></h3>
                                 </Segment>
                             </GridColumn>
                         </GridRow>
