@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
-class Register extends Component {
+class Mainpage extends Component {
 
     render() {
         if (this.props.jwt_user) {
-            return <Redirect to="/home" />
+            return <Redirect to="/home"/>
         }
         return (
             <div>
-                Register
+                Mainpage
             </div>
         )
     }
@@ -22,4 +22,4 @@ let mapStateToProps =(state)=> {
     }
 }
 
-export default connect(mapStateToProps)(Register)
+export default connect(mapStateToProps)(Mainpage)

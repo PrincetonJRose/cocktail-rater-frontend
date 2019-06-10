@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Search } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
@@ -10,19 +10,19 @@ class NavBar extends Component {
         return (
             <div className="container">
                 <div className={menuClasses}>
-                    <Link to="/" className="item">
-                    <h2 className="ui header">
-                        <i className={iconClasses}></i>
-                        <div className="content">Cocktail Rater</div>
-                        <div className="sub header">Come to taste. Come to rate.</div>
-                    </h2>
+                    <Link to={this.props.jwt_user ? "/home" : "/"} className="item">
+                        <h2 className="ui header">
+                            <i className={iconClasses}></i>
+                            <div className="content">Cocktail Rater</div>
+                            <div className="sub header">Come to taste. Come to rate.</div>
+                        </h2>
                     </Link>
                     <div className="middle menu">
                         <Link to="/cocktails" className="item" style={{ color: 'black' }} >
-                        <div className="content">Cocktails</div>
+                            <div className="content">Cocktails</div>
                         </Link>
                         <Link to="/ingredients" className="item" style={{ color: 'black' }} >
-                        <div className="content">Ingredients</div>
+                            <div className="content">Ingredients</div>
                         </Link>
                     </div>
                     <div className="right menu">
@@ -54,4 +54,4 @@ let mapStateToProps =(state)=> {
     }
 }
 
-export default connect(mapStateToProps)(Navbar)
+export default connect(mapStateToProps)(NavBar)

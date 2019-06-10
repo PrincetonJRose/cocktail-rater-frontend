@@ -13,7 +13,7 @@ class Cocktails extends Component {
     }
 
     filterCocktails =()=> {
-        if (this.state.filter != '') {
+        if (this.state.filter !== '') {
             let search = this.props.api_cocktails.filter( cocktail => {
                 if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
                 return true

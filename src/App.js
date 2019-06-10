@@ -6,6 +6,7 @@ import Cocktails from './components/Cocktails'
 import Ingredients from './components/Ingredients'
 import Homepage from './components/Homepage'
 import Register from './components/Register'
+import Mainpage from './components/Mainpage'
 import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getApiCocktails, getIngredients, getCocktails } from './services/APICalls'
@@ -29,12 +30,19 @@ class App extends Component {
           <Route path="/cocktails" component={Cocktails} />
           <Route path="/ingredients" component={Ingredients} />
           <Route path="/login" component={Login} />
-          <Route path="/" component={Homepage} />
+          <Route path="/home" component={Homepage} />
           <Route path="/register" component={Register} />
+          <Route path="/" component={Mainpage} />
         </Switch>
       </div>
     )
   }
 }
 
-export default connect()(App)
+let mapStateToProps =(state)=> {
+  return {
+    jwt_user: state.jwt_user
+  }
+}
+
+export default connect(mapStateToProps)(App)
