@@ -1,13 +1,45 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Image, Grid, GridRow, GridColumn, Menu, SegmentGroup } from 'semantic-ui-react'
+import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Header, Icon, Form, Input, Select, Dropdown, DropdownMenu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
+import jwt_decode from 'jwt-decode'
+import { createReview, deleteReview, updateReview, getApiCocktail, getCocktail } from '../services/APICalls'
 
 class CocktailInfo extends Component {
+    constructor() {
+        super()
+        this.state = { rating: 0.0, content: '', modal_toggle: false }
+    }
     
+    getCocktailInfo(cocktail) {
+        if (cocktail.api_cocktail_id) {
+            getApiCocktail(cocktail.id).then(data => {
+                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+            })
+        } else {
+            getCocktail(cocktail.id).then(data => {
+                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+            })
+        }
+    }
+
+    toggleModal =()=> {
+        this.setState({ modal_toggle: !this.state.modal_toggle })
+    }
+
+    handleSubmit =()=> {
+        console.log("Hiya")
+    }
+
     render() {
         const c = this.props.cocktail
+        const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
+            key: number,
+            text: number,
+            value: number,
+        }))
+        const userReview = [false]
         let ingredients = []
         if (this.props.cocktail.api_cocktail_id) {
             for (let i = 1; i < 16; i++) {
@@ -31,7 +63,20 @@ class CocktailInfo extends Component {
                 ingredients.push(ing)
             }
         }
-
+        if (this.props.jwt_user) {
+            c.reviews.map( review => {
+                if (review.user_id === jwt_decode(this.props.jwt_user).user_id) {
+                    userReview[0] = true
+                    userReview.push(review)
+                }
+            })
+        }
+        let avg = 0
+        let avgRating = c.reviews.map( review => {
+            avg += review.rating
+        })
+        avg = avg/c.reviews.length
+            
         return (
             <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
                 <GridRow centered>
@@ -47,14 +92,14 @@ class CocktailInfo extends Component {
                         <Image className="ui medium image" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `groove` }}/>
                     </GridColumn>
                     <Segment textAlign="left" inverted color="black" floated="left">
-                        <Menu fluid vertical >
+                        <Menu fluid vertical inverted color="black">
                             <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
                             <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
                             <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
                             <Menu.Item><b><u>Video</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
-                            <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length}</Menu.Item>
+                            <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length} <Button basic color="red" circular icon="empty heart" /></Menu.Item>
                             <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
-                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + c.likes.length}</Menu.Item>
+                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + avg + ' / 10'}</Menu.Item>
                         </Menu>
                     </Segment>
                 </GridRow>
@@ -92,6 +137,30 @@ class CocktailInfo extends Component {
                                     {
                                         <Reviews c={c}/>
                                     }
+                                    <div><br></br></div>
+                                            {
+                                                userReview[0] ?
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modal_toggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Review</Button>}>
+                                                        <Modal.Header>Your review:</Modal.Header>
+                                                        <Modal.Content scrolling>
+                                                            <Form size="large">
+                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({rating: data.value})}/>
+                                                                <br></br>
+                                                                <div><p></p></div>
+                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({content: e.target.value})} required/>
+                                                            </Form>
+                                                        </Modal.Content>
+                                                        <Modal.Actions>
+                                                            <Button positive onClick={()=>{
+                                                                this.toggleModal()
+                                                                console.log("Heya")
+                                                                }}>Submit Changes!</Button>
+                                                            <Button negative onClick={()=>{console.log("Hiya")}}>Delete Review</Button>
+                                                        </Modal.Actions>
+                                                    </Modal>
+                                                :
+                                                <Button primary onClick={() => {console.log("hiya")}} content="Create Review" />
+                                            }
                                 </Segment>
                             </GridColumn>
                         </GridRow>

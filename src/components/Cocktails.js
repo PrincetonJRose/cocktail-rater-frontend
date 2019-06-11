@@ -54,6 +54,7 @@ class Cocktails extends Component {
         } else  {
             return this.props.custom_cocktails
         }
+        console.log("Yay?")
     }
 
     getCocktailInfo(cocktail) {
@@ -66,9 +67,6 @@ class Cocktails extends Component {
                 this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
             })
         }
-        // if (this.props.cocktail) {
-        //     this.props.history.push("/cocktails/" + this.props.cocktail.id)
-        // }
     }
     
     render() {
