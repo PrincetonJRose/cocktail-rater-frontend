@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Header, Icon, Form, Input, Select, Dropdown, DropdownMenu } from 'semantic-ui-react'
+import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Header, Icon, Form, Input, Select, Dropdown, DropdownMenu, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
 import jwt_decode from 'jwt-decode'
-import { createReview, deleteReview, updateReview, getApiCocktail, getCocktail } from '../services/APICalls'
+import { createReview, deleteReview, updateReview, getUser } from '../services/APICalls'
 
 class CocktailInfo extends Component {
     constructor() {
         super()
-        this.state = { modalToggle: false, userReview: false, review: {}}
+        this.state = { modalToggle: false, userReview: false, review: {}, userLike: false}
     }
     
     toggleModal =()=> {
@@ -23,11 +23,32 @@ class CocktailInfo extends Component {
     }
     
     handleCreate =()=> {
-
+        getUser(jwt_decode(this.props.jwt_user).user_id).then( user => {
+            let review = {...this.state.review, user_id: user.id, user_name: user.username }
+            if (this.props.cocktail.api_cocktail_id) {
+                review = { ...review, cocktail_id: null, api_cocktail_info_id: this.props.cocktail.id}
+            } else {
+                review = { ...review, cocktail_id: this.props.cocktail.id, api_cocktail_info_id: null}
+            }
+            console.log(review)
+            createReview(review, this.props.jwt_user).then( data => {
+                this.checkData(data)
+            }
+        )})
     }
 
     handleDelete =()=> {
+        deleteReview(this.state.review, this.props.jwt_user).then( data => {
+            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+        })
+    }
 
+    checkData =(data)=> {
+        if (data.error || data.errors) {
+                
+        } else {
+            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+        }
     }
 
     render() {
@@ -36,9 +57,10 @@ class CocktailInfo extends Component {
             text: number,
             value: number,
         }))
-        const c = this.props.cocktail
+
         let ingredients = []
-        if (this.props.cocktail.api_cocktail_id) {
+        const c = this.props.cocktail
+        if (this.props.cocktail.api_cocktail_id && this.props.cocktail) {
             for (let i = 1; i < 16; i++) {
                 let ing = {}
                 if (c[`ingredient_${i}`] == '' || c[`ingredient_${i}`] == ' ' || c[`ingredient_${i}`] == null) {
@@ -52,7 +74,7 @@ class CocktailInfo extends Component {
                 }
                 ingredients.push(ing)
             }
-        } else {
+        } else if (this.props.cocktail.id) {
             for (let i=0; i < c.ingredients.length; i++) {
                 let ing = {}
                 ing.ingredient = c.ingredients[i].name
@@ -70,14 +92,15 @@ class CocktailInfo extends Component {
         } else if (c.reviews.length === 0 && this.state.userReview) {
             this.setState({ userReview: false })
         }
-        
-        console.log(c.reviews.length, this.state.userReview)
+
         
         let avg = 0
-        c.reviews.map( review => {
-            avg += review.rating
-        })
-        avg = avg/c.reviews.length
+        if (c.reviews.length > 0) {
+            c.reviews.map( review => {
+                avg += review.rating
+            })
+            avg = avg/c.reviews.length
+        }
         
         return (
             <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
@@ -142,7 +165,7 @@ class CocktailInfo extends Component {
                                     <div><br></br></div>
                                             {
                                                 this.state.userReview ?
-                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Your Review</Button>}>
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Your Review</Button>}>
                                                         <Modal.Header>Your review:</Modal.Header>
                                                         <Modal.Content scrolling>
                                                             <Form size="large">
@@ -155,16 +178,16 @@ class CocktailInfo extends Component {
                                                         <Modal.Actions>
                                                             <Button positive onClick={()=>{
                                                                 this.toggleModal()
-                                                                this.handleEdit(c)
+                                                                this.handleEdit()
                                                                 }}>Submit Changes!</Button>
                                                             <Button negative onClick={()=>{
                                                                 this.toggleModal()
-                                                                this.handleDelete(c)
+                                                                this.handleDelete()
                                                                 }}>Delete Review</Button>
                                                         </Modal.Actions>
                                                     </Modal>
                                                 :
-                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
                                                     <Modal.Header>Your review:</Modal.Header>
                                                     <Modal.Content scrolling>
                                                         <Form size="large">
@@ -177,7 +200,7 @@ class CocktailInfo extends Component {
                                                     <Modal.Actions>
                                                         <Button positive onClick={()=>{
                                                             this.toggleModal()
-                                                            this.handleCreate(c)
+                                                            this.handleCreate()
                                                             }}>Submit Review!</Button>
                                                     </Modal.Actions>
                                                 </Modal>
