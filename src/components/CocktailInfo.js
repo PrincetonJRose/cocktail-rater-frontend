@@ -9,7 +9,11 @@ import { createReview, deleteReview, updateReview, getUser } from '../services/A
 class CocktailInfo extends Component {
     constructor() {
         super()
-        this.state = { modalToggle: false, userReview: false, review: {}, userLike: false}
+        this.state = { modalToggle: false, review: {}, userLike: false}
+    }
+    
+    componentDidUpdate() {
+        this.checkReviews(this.props.cocktail)
     }
     
     toggleModal =()=> {
@@ -30,7 +34,6 @@ class CocktailInfo extends Component {
             } else {
                 review = { ...review, cocktail_id: this.props.cocktail.id, api_cocktail_info_id: null}
             }
-            console.log(review)
             createReview(review, this.props.jwt_user).then( data => {
                 this.checkData(data)
             }
@@ -45,22 +48,15 @@ class CocktailInfo extends Component {
 
     checkData =(data)=> {
         if (data.error || data.errors) {
-                
+            
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
         }
     }
 
-    render() {
-        const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
-            key: number,
-            text: number,
-            value: number,
-        }))
-
+    listIngredients =(c)=> {
         let ingredients = []
-        const c = this.props.cocktail
-        if (this.props.cocktail.api_cocktail_id && this.props.cocktail) {
+        if (c.api_cocktail_id && c) {
             for (let i = 1; i < 16; i++) {
                 let ing = {}
                 if (c[`ingredient_${i}`] == '' || c[`ingredient_${i}`] == ' ' || c[`ingredient_${i}`] == null) {
@@ -74,7 +70,7 @@ class CocktailInfo extends Component {
                 }
                 ingredients.push(ing)
             }
-        } else if (this.props.cocktail.id) {
+        } else if (c.id) {
             for (let i=0; i < c.ingredients.length; i++) {
                 let ing = {}
                 ing.ingredient = c.ingredients[i].name
@@ -82,18 +78,23 @@ class CocktailInfo extends Component {
                 ingredients.push(ing)
             }
         }
+        return ingredients
+    }
 
-        if (this.props.jwt_user && c.reviews.length > 0 && this.state.userReview === false) {
-            c.reviews.map( review => {
-                if (review.user_id === jwt_decode(this.props.jwt_user).user_id) {
-                    this.setState({ review: review, userReview: true })
-                }
-            })
-        } else if (c.reviews.length === 0 && this.state.userReview) {
-            this.setState({ userReview: false })
+    checkReviews =(c)=> {
+        if (this.props.jwt_user) {
+            if (c.reviews.length > 0 && this.props.userReview == null) {
+                c.reviews.map( review => {
+                    if (review.user_id === jwt_decode(this.props.jwt_user).user_id) {
+                        this.props.dispatch({ type: "SET_USER_REVIEW", userReview: review })
+                        this.setState({ review: review })
+                    }
+                })
+            }
         }
+    }
 
-        
+    getAverageRating =(c)=> {
         let avg = 0
         if (c.reviews.length > 0) {
             c.reviews.map( review => {
@@ -101,6 +102,21 @@ class CocktailInfo extends Component {
             })
             avg = avg/c.reviews.length
         }
+        return avg
+    }
+
+    render() {
+        
+        const c = this.props.cocktail
+        let ingredients = this.listIngredients(c)
+        
+        this.checkReviews(c)
+        let average = this.getAverageRating(c)
+        const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
+            key: number,
+            text: number,
+            value: number,
+        }))
         
         return (
             <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
@@ -124,7 +140,7 @@ class CocktailInfo extends Component {
                             <Menu.Item><b><u>Video</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
                             <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length} <Button basic color="red" circular icon="empty heart" /></Menu.Item>
                             <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
-                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + avg + ' / 10'}</Menu.Item>
+                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
                         </Menu>
                     </Segment>
                 </GridRow>
@@ -164,15 +180,22 @@ class CocktailInfo extends Component {
                                     }
                                     <div><br></br></div>
                                             {
-                                                this.state.userReview ?
-                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Your Review</Button>}>
+                                                this.props.userReview ?
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> {
+                                                        this.toggleModal()
+                                                        this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
+                                                    }} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
+                                                        
+
+                                                        this.toggleModal()
+                                                        }}>Edit Your Review</Button>}>
                                                         <Modal.Header>Your review:</Modal.Header>
                                                         <Modal.Content scrolling>
                                                             <Form size="large">
-                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
+                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder={this.props.userReview.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required error/>
                                                                 <br></br>
                                                                 <div><p></p></div>
-                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
+                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder={this.props.userReview.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required error/>
                                                             </Form>
                                                         </Modal.Content>
                                                         <Modal.Actions>
@@ -226,7 +249,8 @@ class CocktailInfo extends Component {
 let mapStateToProps =(state)=> {
     return {
         jwt_user: state.users.jwt_user,
-        cocktail: state.cocktails.cocktail
+        cocktail: state.cocktails.cocktail,
+        userReview: state.cocktails.userReview
     }
 }
 

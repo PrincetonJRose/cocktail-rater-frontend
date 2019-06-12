@@ -1,19 +1,25 @@
-export default (state = { current_user: null, jwt_user: null }, action) => {
+export default (state = {
+    current_user: null,
+    jwt_user: null
+}, action) => {
     switch (action.type) {
         case "SET_USER": {
             return {
-                ...state, current_user: action.user
+                ...state,
+                current_user: action.user
             }
         }
         case "CLEAR_USER": {
             return {
-                ...state, current_user: null
+                ...state,
+                current_user: null
             }
         }
         case "SET_AUTH": {
             if (localStorage.getItem("jwt_user")) {
                 return {
-                    ...state, jwt_user: localStorage.getItem("jwt_user")
+                    ...state,
+                    jwt_user: localStorage.getItem("jwt_user")
                 }
             } else {
                 return state
@@ -21,9 +27,11 @@ export default (state = { current_user: null, jwt_user: null }, action) => {
         }
         case "CLEAR_AUTH": {
             return {
-                ...state, jwt_user: null
+                ...state,
+                jwt_user: null
             }
         }
-        default: return state
+        default:
+            return state
     }
 }
