@@ -1,10 +1,26 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-export default class Homepage extends Component {
-
+class Homepage extends Component {
+    
     render() {
-        return (
-            <div></div>
-        )
+        if (this.props.jwt_user) {
+            return (
+                <div>
+                    Homepage
+                </div>
+            )
+        } else {
+            return <Redirect to="/" />
+        }
     }
 }
+
+let mapStateToProps =(state)=> {
+    return {
+        jwt_user: state.users.jwt_user
+    }
+}
+
+export default connect(mapStateToProps)(Homepage)

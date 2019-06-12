@@ -5,6 +5,7 @@
   "dependencies": {
     "babel": "^6.23.0",
     "debouncer": "^1.1.2",
+    "jwt-decode": "^2.2.0",
     "react": "^16.8.6",
     "react-card-flip": "^0.7.1",
     "react-dom": "^16.8.6",
