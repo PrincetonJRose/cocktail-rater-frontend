@@ -8,7 +8,7 @@ class Reviews extends Component {
     render() {
         let c = this.props.c
         return (
-            <div className="container" style={{ overflowY: `auto`, maxHeight: `35%`}} >
+            <div className="container" style={{ overflowY: `auto`, maxHeight: `45%`}} >
                 {
                     c.reviews.map( review => {
                         return (

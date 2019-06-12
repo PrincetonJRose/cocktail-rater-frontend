@@ -9,37 +9,34 @@ import { createReview, deleteReview, updateReview, getApiCocktail, getCocktail }
 class CocktailInfo extends Component {
     constructor() {
         super()
-        this.state = { rating: 0.0, content: '', modal_toggle: false }
+        this.state = { modalToggle: false, userReview: false, review: {}}
     }
     
-    getCocktailInfo(cocktail) {
-        if (cocktail.api_cocktail_id) {
-            getApiCocktail(cocktail.id).then(data => {
-                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
-            })
-        } else {
-            getCocktail(cocktail.id).then(data => {
-                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
-            })
-        }
-    }
-
     toggleModal =()=> {
-        this.setState({ modal_toggle: !this.state.modal_toggle })
+        this.setState({ modalToggle: !this.state.modalToggle })
+    }
+    
+    handleEdit =()=> {
+        updateReview(this.state.review, this.props.jwt_user).then(data => {
+            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+        })
+    }
+    
+    handleCreate =()=> {
+
     }
 
-    handleSubmit =()=> {
-        console.log("Hiya")
+    handleDelete =()=> {
+
     }
 
     render() {
-        const c = this.props.cocktail
         const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
             key: number,
             text: number,
             value: number,
         }))
-        const userReview = [false]
+        const c = this.props.cocktail
         let ingredients = []
         if (this.props.cocktail.api_cocktail_id) {
             for (let i = 1; i < 16; i++) {
@@ -63,20 +60,25 @@ class CocktailInfo extends Component {
                 ingredients.push(ing)
             }
         }
-        if (this.props.jwt_user) {
+
+        if (this.props.jwt_user && c.reviews.length > 0 && this.state.userReview === false) {
             c.reviews.map( review => {
                 if (review.user_id === jwt_decode(this.props.jwt_user).user_id) {
-                    userReview[0] = true
-                    userReview.push(review)
+                    this.setState({ review: review, userReview: true })
                 }
             })
+        } else if (c.reviews.length === 0 && this.state.userReview) {
+            this.setState({ userReview: false })
         }
+        
+        console.log(c.reviews.length, this.state.userReview)
+        
         let avg = 0
-        let avgRating = c.reviews.map( review => {
+        c.reviews.map( review => {
             avg += review.rating
         })
         avg = avg/c.reviews.length
-            
+        
         return (
             <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
                 <GridRow centered>
@@ -139,27 +141,46 @@ class CocktailInfo extends Component {
                                     }
                                     <div><br></br></div>
                                             {
-                                                userReview[0] ?
-                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modal_toggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Review</Button>}>
+                                                this.state.userReview ?
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Edit Your Review</Button>}>
                                                         <Modal.Header>Your review:</Modal.Header>
                                                         <Modal.Content scrolling>
                                                             <Form size="large">
-                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({rating: data.value})}/>
+                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
                                                                 <br></br>
                                                                 <div><p></p></div>
-                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({content: e.target.value})} required/>
+                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
                                                             </Form>
                                                         </Modal.Content>
                                                         <Modal.Actions>
                                                             <Button positive onClick={()=>{
                                                                 this.toggleModal()
-                                                                console.log("Heya")
+                                                                this.handleEdit(c)
                                                                 }}>Submit Changes!</Button>
-                                                            <Button negative onClick={()=>{console.log("Hiya")}}>Delete Review</Button>
+                                                            <Button negative onClick={()=>{
+                                                                this.toggleModal()
+                                                                this.handleDelete(c)
+                                                                }}>Delete Review</Button>
                                                         </Modal.Actions>
                                                     </Modal>
                                                 :
-                                                <Button primary onClick={() => {console.log("hiya")}} content="Create Review" />
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
+                                                    <Modal.Header>Your review:</Modal.Header>
+                                                    <Modal.Content scrolling>
+                                                        <Form size="large">
+                                                            <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
+                                                            <br></br>
+                                                            <div><p></p></div>
+                                                            <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
+                                                        </Form>
+                                                    </Modal.Content>
+                                                    <Modal.Actions>
+                                                        <Button positive onClick={()=>{
+                                                            this.toggleModal()
+                                                            this.handleCreate(c)
+                                                            }}>Submit Review!</Button>
+                                                    </Modal.Actions>
+                                                </Modal>
                                             }
                                 </Segment>
                             </GridColumn>
@@ -181,7 +202,8 @@ class CocktailInfo extends Component {
 
 let mapStateToProps =(state)=> {
     return {
-        jwt_user: state.users.jwt_user
+        jwt_user: state.users.jwt_user,
+        cocktail: state.cocktails.cocktail
     }
 }
 

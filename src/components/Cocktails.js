@@ -54,7 +54,6 @@ class Cocktails extends Component {
         } else  {
             return this.props.custom_cocktails
         }
-        console.log("Yay?")
     }
 
     getCocktailInfo(cocktail) {
@@ -74,7 +73,7 @@ class Cocktails extends Component {
             <div className="container" id="full-fit">
                 <div className="container" style={{ width: `65%`, height: `100%`, overflowY: `auto`, overflowX: `hidden`, float: `right` }}>
                     { this.props.cocktail ?
-                        <CocktailInfo cocktail={this.props.cocktail}/>
+                        <CocktailInfo />
                         :
                         <Grid verticalAlign="middle">
                             <GridRow centered verticalAlign="middle">
