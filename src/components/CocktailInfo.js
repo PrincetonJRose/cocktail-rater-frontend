@@ -119,7 +119,8 @@ class CocktailInfo extends Component {
         }))
         
         return (
-            <Grid className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
+                <Segment inverted color="black"className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
+            <Grid inverted color="black" >
                 <GridRow centered>
                     <GridColumn textAlign="centered" centered width={8}>
                         <p></p>
@@ -130,9 +131,9 @@ class CocktailInfo extends Component {
                 </GridRow>
                 <GridRow stretched centered >
                     <GridColumn width={7}>
-                        <Image className="ui medium image" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `groove` }}/>
+                        <Image className="ui medium image" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset` }}/>
                     </GridColumn>
-                    <Segment textAlign="left" inverted color="black" floated="left">
+                    <Segment textAlign="left" inverted color="black" floated="left" style={{ borderStyle: `inset`, borderRadius: `12px` }}>
                         <Menu fluid vertical inverted color="black">
                             <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
                             <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
@@ -146,7 +147,7 @@ class CocktailInfo extends Component {
                 </GridRow>
                 <GridRow centered>
                     <GridColumn width={12}>
-                        <Segment inverted color="black" style={{  }}>
+                        <Segment inverted color="black" style={{ borderStyle: `inset`, borderRadius: `12px` }}>
                             <h3 style={{ textAlign: `center` }}><b><u>What's required</u></b></h3>
                             <table border="1" style={{ width: `100%`, borderStyle: `dotted` }}>
                                 <tr>
@@ -173,7 +174,7 @@ class CocktailInfo extends Component {
                     this.props.jwt_user ?
                         <GridRow centered>
                             <GridColumn width={12} >
-                                <Segment inverted color="black" >
+                                <Segment inverted color="black" style={{ borderStyle: `inset`, borderRadius: `12px`, borderColor: `hot pink` }}>
                                 <h3 style={{ textAlign: `center` }}><b><u>Reviews</u>:</b></h3>
                                     {
                                         <Reviews c={c}/>
@@ -242,6 +243,7 @@ class CocktailInfo extends Component {
                         </GridRow>
                 }
             </Grid>
+            </Segment>
         )
     }
 }

@@ -4,6 +4,7 @@ const ingredientsUrl = `http://localhost:3000/ingredients/`
 const apiCocktailsUrl = `http://localhost:3000/api_cocktail_infos/`
 const usersUrl = `http://localhost:3000/users/`
 const reviewsUrl = `http://localhost:3000/reviews/`
+const loginUrl = `http://localhost:3000/login/`
 
 export function getApiCocktails() {
     return fetch(apiCocktailsUrl)
@@ -54,7 +55,6 @@ export function createUser(userInfo) {
             },
             body: JSON.stringify(userInfo)
         })
-        .catch(errors => console.log(errors))
         .then(res => res.json())
 }
 
