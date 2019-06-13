@@ -32,7 +32,11 @@ class NavBar extends Component {
                         <Link to="/" className="item" style={{ color: 'black' }}
                                 onClick={(e) => {
                                     localStorage.clear()
+                                    this.props.dispatch({ type: "CLEAR_USER" })
                                     this.props.dispatch({ type: "CLEAR_AUTH" })
+                                    this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
+                                    this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
+                                    this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
                                     }} >
                                 <div className="content">Logout</div>
                         </Link> 

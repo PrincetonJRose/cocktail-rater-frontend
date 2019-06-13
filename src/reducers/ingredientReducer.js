@@ -5,6 +5,11 @@ export default (state = { ingredients: [], ingredient: null }, action) => {
                 ...state, ingredients: action.ingredientData
             }
         }
+        case "SET_INGREDIENT": {
+            return {
+                ...state, ingredient: action.ingredient
+            }
+        }
         default: return state
     }
 }

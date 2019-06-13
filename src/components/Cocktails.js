@@ -2,38 +2,25 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import '../style.css'
 import CocktailInfo from './CocktailInfo'
-import { Input, Grid, Segment, GridColumn, GridRow, Button } from 'semantic-ui-react'
-import { getCocktail } from '../services/APICalls'
-import { getApiCocktail } from '../services/APICalls'
-import { Link, Route } from 'react-router-dom'
+import { Input, Grid, Segment, GridColumn, GridRow, Menu, Image } from 'semantic-ui-react'
+import { getCocktail, getApiCocktail } from '../services/APICalls'
+import { Link } from 'react-router-dom'
 
 class Cocktails extends Component {
     constructor() {
         super()
-        this.state = { filter: '' }
-    }
-
-    filterCocktails =()=> {
-        if (this.state.filter !== '') {
-            let search = this.props.api_cocktails.filter( cocktail => {
-                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
-                return true
-            })
-            return search
-        } else  {
-            return this.props.api_cocktails
-        }
+        this.state = { filter: '', }
     }
 
     componentDidUpdate() {
         let cUrl
         if (window.location.pathname.split("/").length > 2 && !this.props.cocktail) {
-            if (window.location.pathname.split("/")[2] == 'api') {
+            if (window.location.pathname.split("/")[2] === 'api') {
                 cUrl = this.props.api_cocktails.filter( c => {
                     if (c.id == window.location.pathname.split("/")[3])
                     return true
                 })
-            } else if (window.location.pathname.split("/")[2] == 'custom') {
+            } else if (window.location.pathname.split("/")[2] === 'custom') {
                 cUrl = this.props.custom_cocktails.filter( c => {
                     if (c.id == window.location.pathname.split("/")[3])
                     return true
@@ -45,12 +32,25 @@ class Cocktails extends Component {
         }
     }
 
+    filterCocktails = () => {
+        if (this.state.filter !== '') {
+            let search = this.props.api_cocktails.filter(cocktail => {
+                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
+                    return true
+            })
+            return search
+        } else {
+            return this.props.api_cocktails
+        }
+    }
+
     filterCustomCocktails =()=> {
         if (this.state.filter !== '') {
-            return this.props.custom_cocktails.filter( cocktail => {
+            let search = this.props.custom_cocktails.filter( cocktail => {
                 if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
                 return true
             })
+            return search
         } else  {
             return this.props.custom_cocktails
         }
@@ -98,23 +98,23 @@ class Cocktails extends Component {
                         <p></p>
                         <div><h3><b><u>Cocktails</u></b></h3></div>
                         <Input onChange={(e)=>this.setState({ filter: e.target.value })} placeholder="Search cocktails here..."/>
-                        <div className="container" id="center-text" style={{ width: `70%`, height: `80%`, maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
-                            <ul id="center-text">
-                                {this.filterCocktails().map( cocktail => {
-                                    return <Link to={"/cocktails/api/" + cocktail.id}><div><button onClick={()=> this.getCocktailInfo(cocktail)}>{cocktail.name}</button></div></Link>
+                        <div className="container" id="center-text" style={{ width: `70%`, height: `80%`, maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, borderColor: `pink`, textAlign: `center`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
+                            <Menu fluid vertical>
+                                {this.filterCocktails().map(cocktail => {
+                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Link to={"/cocktails/api/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
                                 })}
-                            </ul>
+                            </Menu>
                         </div>
                     </div>
                     <div id="center-text" style={{ overflowX: `hidden`, overflowY: `auto`, height: `35%` }}>
                         <div><h3><b><u>Custom Drinks</u></b></h3></div>
                         <div className="sub-content">(Cocktails users have submitted)</div>
-                        <div className="container" id="center-text" style={{ width: `70%`, height: `68%`,maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, display: `flex`, position: `relative`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
-                            <ul>
+                        <div className="container" id="center-text" style={{ width: `70%`, height: `68%`,maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, borderColor: `pink`, display: `flex`, position: `relative`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
+                            <Menu fluid vertical>
                                 {this.filterCustomCocktails().map( cocktail => {
-                                    return <Link to={"/cocktails/custom/" + cocktail.id}><div><button onClick={()=> this.getCocktailInfo(cocktail)}>{cocktail.name}</button></div></Link>
+                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Link to={"/cocktails/custom/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
                                 })}
-                            </ul>
+                            </Menu>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,8 @@ let mapStateToProps =(state)=> {
     return {
         api_cocktails: state.cocktails.api_cocktails,
         custom_cocktails: state.cocktails.custom_cocktails,
-        cocktail: state.cocktails.cocktail
+        cocktail: state.cocktails.cocktail,
+        ingredients: state.ingredients.ingredients
     }
 }
 

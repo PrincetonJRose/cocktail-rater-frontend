@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Header, Icon, Form, Input, Select, Dropdown, DropdownMenu, Message } from 'semantic-ui-react'
+import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Form, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
 import jwt_decode from 'jwt-decode'
@@ -59,11 +59,11 @@ class CocktailInfo extends Component {
         if (c.api_cocktail_id && c) {
             for (let i = 1; i < 16; i++) {
                 let ing = {}
-                if (c[`ingredient_${i}`] == '' || c[`ingredient_${i}`] == ' ' || c[`ingredient_${i}`] == null) {
+                if (c[`ingredient_${i}`] === '' || c[`ingredient_${i}`] === ' ' || c[`ingredient_${i}`] === null) {
                     break
                 }
                 ing.ingredient = c[`ingredient_${i}`]
-                if (c[`measurement_${i}`] == '' || c[`measurement_${i}`] == ' ' || c[`measurement_${i}`] == null) {
+                if (c[`measurement_${i}`] === '' || c[`measurement_${i}`] === ' ' || c[`measurement_${i}`] === null) {
                     ing.measurement = "No measurement given."
                 } else {
                     ing.measurement = c[`measurement_${i}`]
@@ -119,52 +119,57 @@ class CocktailInfo extends Component {
         }))
         
         return (
-                <Segment inverted color="black"className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
-            <Grid inverted color="black" >
+                <Segment className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
+            <Grid  >
                 <GridRow centered>
                     <GridColumn textAlign="centered" centered width={8}>
                         <p></p>
-                        <Segment inverted color="black">
+                        <Segment style={{ borderStyle: `groove`, borderColor: `pink`, borderRadius: `12px` }}>
                             <h1><u>{c.name}</u></h1>
                         </Segment>
                     </GridColumn>
                 </GridRow>
                 <GridRow stretched centered >
-                    <GridColumn width={7}>
-                        <Image className="ui medium image" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset` }}/>
-                    </GridColumn>
-                    <Segment textAlign="left" inverted color="black" floated="left" style={{ borderStyle: `inset`, borderRadius: `12px` }}>
-                        <Menu fluid vertical inverted color="black">
-                            <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
-                            <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
-                            <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
-                            <Menu.Item><b><u>Video</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
-                            <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length} <Button basic color="red" circular icon="empty heart" /></Menu.Item>
-                            <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
-                            <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
-                        </Menu>
+                    <GridColumn width={12}>
+                    <Segment className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
+                        <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}/>
+                        <Segment fluid floated="right" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, position: `relative` }}>
+                            <Menu fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
+                                <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
+                                <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
+                                <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
+                                <Menu.Item><b><u>Video</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
+                                <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length} <Button basic color="red" circular icon="empty heart" /></Menu.Item>
+                                <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
+                                <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
+                            </Menu>
+                        </Segment>
                     </Segment>
+                    </GridColumn>
                 </GridRow>
                 <GridRow centered>
                     <GridColumn width={12}>
-                        <Segment inverted color="black" style={{ borderStyle: `inset`, borderRadius: `12px` }}>
-                            <h3 style={{ textAlign: `center` }}><b><u>What's required</u></b></h3>
-                            <table border="1" style={{ width: `100%`, borderStyle: `dotted` }}>
-                                <tr>
-                                    <th style={{ textAlign:`center`, width:"50%" }}>Ingredients:</th>
-                                    <th style={{ textAlign:`center`, width:"50%" }}>Measurements:</th>
-                                </tr>
-                                {
-                                    ingredients.map( i => { 
-                                        return (
-                                            <tr>
-                                                <td style={{ width:"50%" }}>{i.ingredient}</td>
-                                                <td style={{ width:"50%" }}>{i.measurement}</td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </table>
+                        <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
+                            <Table singleLine celled>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell textAlign="center">Ingredient</Table.HeaderCell>
+                                        <Table.HeaderCell textAlign="center">Measurement</Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                    {
+                                        ingredients.map( i => { 
+                                            return (
+                                                <Table.Row>
+                                                    <Table.Cell>{i.ingredient}</Table.Cell>
+                                                    <Table.Cell>{i.measurement}</Table.Cell>
+                                                </Table.Row>
+                                            )
+                                        })
+                                    }
+                                </Table.Body>
+                            </Table>
                             <h3 style={{ textAlign: `center` }}><b><u>How to create</u></b></h3>
                             <p>{c.instructions}</p>
                         </Segment>
@@ -174,7 +179,7 @@ class CocktailInfo extends Component {
                     this.props.jwt_user ?
                         <GridRow centered>
                             <GridColumn width={12} >
-                                <Segment inverted color="black" style={{ borderStyle: `inset`, borderRadius: `12px`, borderColor: `hot pink` }}>
+                                <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
                                 <h3 style={{ textAlign: `center` }}><b><u>Reviews</u>:</b></h3>
                                     {
                                         <Reviews c={c}/>
@@ -185,9 +190,7 @@ class CocktailInfo extends Component {
                                                     <Modal dimmer="blurring" size="large" closeIcon onClose={()=> {
                                                         this.toggleModal()
                                                         this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
-                                                    }} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
-                                                        
-
+                                                    }} basic  open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
                                                         this.toggleModal()
                                                         }}>Edit Your Review</Button>}>
                                                         <Modal.Header>Your review:</Modal.Header>
@@ -211,7 +214,7 @@ class CocktailInfo extends Component {
                                                         </Modal.Actions>
                                                     </Modal>
                                                 :
-                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic inverted color="black" open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
+                                                    <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
                                                     <Modal.Header>Your review:</Modal.Header>
                                                     <Modal.Content scrolling>
                                                         <Form size="large">
@@ -235,7 +238,7 @@ class CocktailInfo extends Component {
                     :
                         <GridRow centered>
                             <GridColumn width={12} >
-                                <Segment inverted color="black" >
+                                <Segment  style={{ borderStyle: `groove`, borderColor: `pink`, borderRadius: `12px` }}>
                                     <h3 style={{ textAlign: `center` }}><b>To see and write reviews you must be <Link to="/login" ><u>logged</u></Link> in.</b></h3>
                                     <h3 style={{ textAlign: `center` }}><b>Don't have an account? You can click  <Link to="/register" ><u>here</u></Link> to create one.</b></h3>
                                 </Segment>

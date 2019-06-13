@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Form, Input, Grid, Button, Segment, Header, Message } from 'semantic-ui-react'
-import { createUser } from '../services/APICalls'
+import { Form, Grid, Button, Segment, Header, Message } from 'semantic-ui-react'
+import { createUser, getUser } from '../services/APICalls'
 
 class Register extends Component {
     constructor() {
@@ -19,22 +19,45 @@ class Register extends Component {
                 img_url: '',
             },
             errors: [],
+            loading: false,
         }
     }
 
     handleSubmit =(e)=> {
         e.preventDefault()
-        console.log(this.state.user)
         createUser(this.state)
             .then(data => {
                 if (data.errors) {
-                    console.log(data.errors)
-                    this.setState({ errors: data.errors })
+                    this.setState({ errors: data.errors, loading: false })
                 } else {
-                    // this.loginNewUser(data)
-                    console.log(data, "Yay")
+                    this.loginNewUser(data)
                 }
             })
+        e.target.reset()
+    }
+
+    loginNewUser =(user)=> {
+        fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(this.state.user)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.errors) {
+                this.setState({ errors: data.errors, loading: false })
+            } else {
+                getUser(user.id).then( userData => {
+                    this.props.dispatch({ type: "SET_USER", user: userData })
+                    localStorage.setItem("jwt_user", data.jwt_user)
+                })
+                this.props.dispatch({ type: "SET_AUTH" })
+                this.props.history.push("/home")
+            }
+        })
+
     }
 
     render() {
@@ -47,7 +70,7 @@ class Register extends Component {
                         <Header as='h2' color='black' textAlign='center'>
                         <p><i className="icon cocktail"></i> Enter Account Information <i className = "icon cocktail"></i></p>
                         </Header>
-                        <Form size='large' onSubmit={this.handleSubmit} error>
+                        <Form loading={this.state.loading} size='large' onSubmit={(e)=> {this.handleSubmit(e);this.setState({loading: true}) }} error>
                             <Segment stacked>
                             {this.state.errors.map( error => {
                                 return <Message error content={error}/>
@@ -68,7 +91,7 @@ class Register extends Component {
                                 type="text" 
                                 name="username" 
                                 iconPosition='left' 
-                                placeholder='Username...' 
+                                placeholder='Username (must be between 6-16 characters)' 
                                 required  
                                 onChange={(e) => this.setState({ user: {...this.state.user, username: e.target.value} })}
                             />
@@ -76,7 +99,7 @@ class Register extends Component {
                                 fluid
                                 icon='lock'
                                 iconPosition='left'
-                                placeholder='Password...'
+                                placeholder='Password (must be between 6-16 characters)'
                                 type='password'
                                 required
                                 onChange={(e) => this.setState({ user: {...this.state.user, password: e.target.value} })}
@@ -114,7 +137,7 @@ class Register extends Component {
                                 type='text'
                                 onChange={(e)=>this.setState({ user: {...this.state.user, bio: e.target.value} })}
                             />
-                            <Button color='green' fluid size='large' type="submit">
+                            <Button color='pink' fluid size='large' type="submit">
                                 Create Account!
                             </Button>
                             </Segment>

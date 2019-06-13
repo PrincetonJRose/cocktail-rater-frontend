@@ -1,3 +1,4 @@
+import jwt_decode from 'jwt-decode'
 const localUrl = `http://localhost:3000/`
 const cocktailsUrl = `http://localhost:3000/cocktails/`
 const ingredientsUrl = `http://localhost:3000/ingredients/`
@@ -78,6 +79,8 @@ export function updateReview(review, jwt_user) {
 }
 
 export function createReview(review, jwt_user) {
+    console.log(jwt_user)
+    console.log(jwt_decode(jwt_user))
     return fetch(reviewsUrl, {
             method: 'POST',
             headers: {

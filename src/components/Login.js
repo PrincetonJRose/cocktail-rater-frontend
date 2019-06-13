@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Form, Button, Message, Grid, Segment, Header } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { getUser } from '../services/APICalls'
+import jwt_decode from 'jwt-decode'
 
 class Login extends Component {
     constructor() {
@@ -10,6 +12,7 @@ class Login extends Component {
             email: '',
             password: '',
             errors: [],
+            loading: false
         }
     }
 
@@ -25,9 +28,12 @@ class Login extends Component {
         .then(res => res.json())
         .then(data => {
             if (data.errors) {
-                this.setState({ errors: data.errors })
+                this.setState({ errors: data.errors, loading: false })
             } else {
-                localStorage.setItem("jwt_user", data.jwt_user)
+                getUser(jwt_decode(data.jwt_user).user_id).then( userData => {
+                    this.props.dispatch({ type: "SET_USER", user: userData })
+                    localStorage.setItem("jwt_user", data.jwt_user)
+                })
                 this.props.dispatch({ type: "SET_AUTH" })
                 this.props.history.push("/home")
             }
@@ -45,7 +51,7 @@ class Login extends Component {
                         <Header as='h2' color='black' textAlign='center'>
                         <i className="icon cocktail"></i> Enter Account Information
                         </Header>
-                        <Form size='large' onSubmit={this.handleSubmit} error>
+                        <Form loading={this.state.loading} size='large' onSubmit={(e)=> {this.handleSubmit(e);this.setState({ loading: true }) }} error>
                             <Segment stacked>
                             {this.state.errors.map( error => {
                                 return <Message error content={error}/>
@@ -74,7 +80,7 @@ class Login extends Component {
                             </Button>
                             </Segment>
                             <Message>
-                                New to the site? Click <Link to="/register"><span>here</span></Link> to sign up!
+                                New to the site? Click <Link to="/register"><span><u>here</u></span></Link> to sign up!
                             </Message>
                         </Form>
                 </Grid.Column>
