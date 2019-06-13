@@ -131,9 +131,9 @@ class CocktailInfo extends Component {
                 </GridRow>
                 <GridRow stretched centered >
                     <GridColumn width={12}>
-                    <Segment className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
-                        <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}/>
-                        <Segment fluid floated="right" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, position: `relative` }}>
+                    <Segment className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
+                        <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}/>
+                        <Segment fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
                             <Menu fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
                                 <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
                                 <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
@@ -150,6 +150,7 @@ class CocktailInfo extends Component {
                 <GridRow centered>
                     <GridColumn width={12}>
                         <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
+                            <h3 style={{ textAlign: `center` }}><b><u>What you'll need</u>:</b></h3>
                             <Table singleLine celled>
                                 <Table.Header>
                                     <Table.Row>
@@ -170,7 +171,7 @@ class CocktailInfo extends Component {
                                     }
                                 </Table.Body>
                             </Table>
-                            <h3 style={{ textAlign: `center` }}><b><u>How to create</u></b></h3>
+                            <h3 style={{ textAlign: `center` }}><b><u>How to create</u>:</b></h3>
                             <p>{c.instructions}</p>
                         </Segment>
                     </GridColumn>
