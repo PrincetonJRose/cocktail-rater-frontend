@@ -1,9 +1,11 @@
+import jwt_decode from 'jwt-decode'
 const localUrl = `http://localhost:3000/`
 const cocktailsUrl = `http://localhost:3000/cocktails/`
 const ingredientsUrl = `http://localhost:3000/ingredients/`
 const apiCocktailsUrl = `http://localhost:3000/api_cocktail_infos/`
 const usersUrl = `http://localhost:3000/users/`
 const reviewsUrl = `http://localhost:3000/reviews/`
+const loginUrl = `http://localhost:3000/login/`
 
 export function getApiCocktails() {
     return fetch(apiCocktailsUrl)
@@ -54,7 +56,6 @@ export function createUser(userInfo) {
             },
             body: JSON.stringify(userInfo)
         })
-        .catch(errors => console.log(errors))
         .then(res => res.json())
 }
 
@@ -78,6 +79,8 @@ export function updateReview(review, jwt_user) {
 }
 
 export function createReview(review, jwt_user) {
+    console.log(jwt_user)
+    console.log(jwt_decode(jwt_user))
     return fetch(reviewsUrl, {
             method: 'POST',
             headers: {

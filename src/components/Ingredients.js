@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { getIngredient } from '../services/APICalls'
 
-export default class Ingredients extends Component {
+class Ingredients extends Component {
+    constructor() {
+        super()
+        this.state = { }
+    }
 
     render () {
         return (
@@ -8,3 +14,14 @@ export default class Ingredients extends Component {
         )
     }
 }
+
+let mapStateToProps =(state)=> {
+    return {
+        ingredient: state.ingredients.ingredient,
+        ingredients: state.ingredients.ingredients,
+        api_cocktails: state.cocktails.api_cocktails,
+        custom_cocktails: state.cocktails.custom_cocktails
+    }
+}
+
+export default connect(mapStateToProps)(Ingredients)
