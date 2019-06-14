@@ -79,8 +79,6 @@ export function updateReview(review, jwt_user) {
 }
 
 export function createReview(review, jwt_user) {
-    console.log(jwt_user)
-    console.log(jwt_decode(jwt_user))
     return fetch(reviewsUrl, {
             method: 'POST',
             headers: {

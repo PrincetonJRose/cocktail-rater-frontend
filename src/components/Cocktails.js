@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import '../style.css'
 import CocktailInfo from './CocktailInfo'
+import IngredientInfo from './IngredientInfo'
 import { Input, Grid, Segment, GridColumn, GridRow, Menu, Image } from 'semantic-ui-react'
 import { getCocktail, getApiCocktail } from '../services/APICalls'
 import { Link } from 'react-router-dom'
@@ -10,6 +11,12 @@ class Cocktails extends Component {
     constructor() {
         super()
         this.state = { filter: '', }
+    }
+
+    componentDidMount() {
+        this.props.dispatch({ type: "SET_INGREDIENT", ingredientData: null })
+        this.props.dispatch({ type: "SET_MEASUREMENTS", measurementData: null })
+        this.props.dispatch({ type: "SET_COCKTAIL_LIST", cocktailListData: null })
     }
 
     componentDidUpdate() {
@@ -35,7 +42,7 @@ class Cocktails extends Component {
     filterCocktails = () => {
         if (this.state.filter !== '') {
             let search = this.props.api_cocktails.filter(cocktail => {
-                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
+                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()) || cocktail)
                     return true
             })
             return search
@@ -79,18 +86,24 @@ class Cocktails extends Component {
         return (
             <div className="container" id="full-fit">
                 <div className="container" style={{ width: `65%`, height: `100%`, overflowY: `auto`, overflowX: `hidden`, float: `right` }}>
-                    { this.props.cocktail ?
-                        <CocktailInfo />
-                        :
-                        <Grid verticalAlign="middle">
-                            <GridRow centered verticalAlign="middle">
-                                <GridColumn  width={10} verticalAlign="middle">
-                                    <Segment inverted color="black" verticalAlign="middle" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, position: `relative` }}>
-                                    (Click one of the cocktails in the list to see it's details!)
-                                    </Segment>
-                                </GridColumn>
-                            </GridRow>
-                        </Grid>
+                { this.props.ingredient ?
+                    <IngredientInfo />
+                    :
+                    <div className="container">
+                        { this.props.cocktail ?
+                            <CocktailInfo />
+                            :
+                            <Grid verticalAlign="middle">
+                                <GridRow centered verticalAlign="middle">
+                                    <GridColumn  width={10} verticalAlign="middle">
+                                        <Segment inverted color="black" verticalAlign="middle" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, position: `relative` }}>
+                                        ( Click one of the cocktails in the list to see it's details! )
+                                        </Segment>
+                                    </GridColumn>
+                                </GridRow>
+                            </Grid>
+                        }
+                        </div>
                     }
                 </div>
                 <div className="container" style={{ width: `35%`, height: `100%`, float: `left` }}>
@@ -128,7 +141,8 @@ let mapStateToProps =(state)=> {
         api_cocktails: state.cocktails.api_cocktails,
         custom_cocktails: state.cocktails.custom_cocktails,
         cocktail: state.cocktails.cocktail,
-        ingredients: state.ingredients.ingredients
+        ingredients: state.ingredients.ingredients,
+        ingredient: state.ingredients.ingredient
     }
 }
 

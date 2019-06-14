@@ -10,7 +10,7 @@ class NavBar extends Component {
         return (
             <div className="container">
                 <div className={menuClasses}>
-                    <Link to={this.props.jwt_user ? "/home" : "/"} className="item">
+                    <Link to={this.props.current_user ? "/home" : "/"} className="item">
                         <h2 className="ui header">
                             <i className={iconClasses}></i>
                             <div className="content">Cocktail Rater</div>
@@ -28,22 +28,22 @@ class NavBar extends Component {
                     <div className="right menu">
                         <Search placeholder="Search..." className="item"/>
                         {
-                        this.props.jwt_user ?
-                        <Link to="/" className="item" style={{ color: 'black' }}
-                                onClick={(e) => {
-                                    localStorage.clear()
-                                    this.props.dispatch({ type: "CLEAR_USER" })
-                                    this.props.dispatch({ type: "CLEAR_AUTH" })
-                                    this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
-                                    this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
-                                    this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
-                                    }} >
-                                <div className="content">Logout</div>
-                        </Link> 
-                        :
-                        <Link to="/login" className="item" style={{ color: 'black' }} >
-                            <div className="content">Login</div>
-                        </Link>
+                            this.props.current_user ?
+                            <Link to="/" className="item" style={{ color: 'black' }}
+                                    onClick={(e) => {
+                                        localStorage.clear()
+                                        this.props.dispatch({ type: "CLEAR_USER" })
+                                        this.props.dispatch({ type: "CLEAR_AUTH" })
+                                        this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
+                                        this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
+                                        this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
+                                        }} >
+                                    <div className="content">Logout</div>
+                            </Link> 
+                            :
+                            <Link to="/login" className="item" style={{ color: 'black' }} >
+                                <div className="content">Login</div>
+                            </Link>
                         }
                     </div>
                 </div>
@@ -54,7 +54,8 @@ class NavBar extends Component {
 
 let mapStateToProps =(state)=> {
     return {
-        jwt_user: state.users.jwt_user
+        jwt_user: state.users.jwt_user,
+        current_user: state.users.current_user
     }
 }
 
