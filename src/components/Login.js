@@ -49,7 +49,7 @@ class Login extends Component {
             <Grid textAlign='center' style={{ height: '90%' }} verticalAlign='middle' >
                     <Grid.Column style={{ maxWidth: 450 }}>
                         <Header as='h2' color='black' textAlign='center'>
-                        <i className="icon cocktail"></i> Enter Account Information
+                        Enter Account Information <i className="icon cocktail"></i>
                         </Header>
                         <Form loading={this.state.loading} size='large' onSubmit={(e)=> {this.handleSubmit(e);this.setState({ loading: true }) }} error>
                             <Segment stacked>

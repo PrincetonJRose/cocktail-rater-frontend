@@ -225,6 +225,7 @@ class CocktailInfo extends Component {
                         <GridColumn width={12}>
                             <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
                                 <h3 style={{ textAlign: `center` }}><b><u>What you'll need</u>:</b></h3>
+                                <div className="sub-content" style={{ textAlign: `center` }}>( Click an ingredient to see it's details )</div>
                                 <Table singleLine celled>
                                     <Table.Header>
                                         <Table.Row>

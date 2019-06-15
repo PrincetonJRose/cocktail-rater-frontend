@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Search } from 'semantic-ui-react'
+import { Search, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 class NavBar extends Component {
@@ -13,8 +13,8 @@ class NavBar extends Component {
                     <Link to={this.props.current_user ? "/home" : "/"} className="item">
                         <h2 className="ui header">
                             <i className={iconClasses}></i>
-                            <div className="content">Cocktail Rater</div>
-                            <div className="sub header">Come to taste. Stay to rate.</div>
+                            <div className="content">Taste & Rate</div>
+                            <div className="sub header" style={{ textAlign: `center` }}>Come to taste. Stay to rate.</div>
                         </h2>
                     </Link>
                     <div className="middle menu">
@@ -26,6 +26,15 @@ class NavBar extends Component {
                         </Link>
                     </div>
                     <div className="right menu">
+                        { this.props.current_user?
+                            <Link to="/home" className="item" >
+                                <div className="content" style={{ color: `black` }}>
+                                    <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
+                                </div>
+                            </Link>
+                        :
+                            null
+                        }
                         <Link to="/search/" className="item" style={{ color: `black` }} >
                             <div className="content">Search <i className="icon search"></i></div>
                         </Link>
@@ -47,6 +56,7 @@ class NavBar extends Component {
                                 <div className="content">Login</div>
                             </Link>
                         }
+
                     </div>
                 </div>
             </div>
