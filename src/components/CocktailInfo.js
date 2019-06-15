@@ -267,15 +267,16 @@ class CocktailInfo extends Component {
                                                             this.toggleModal()
                                                             this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
                                                         }}   open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
+                                                            this.setState({ review: this.props.userReview })
                                                             this.toggleModal()
                                                             }}>Edit Your Review</Button>}>
                                                             <Modal.Header>Your review:</Modal.Header>
                                                             <Modal.Content scrolling>
                                                                 <Form size="large">
-                                                                    <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder={this.props.userReview.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required error/>
+                                                                    <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} value={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required error/>
                                                                     <br></br>
                                                                     <div><p></p></div>
-                                                                    <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder={this.props.userReview.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required error/>
+                                                                    <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" value={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required error/>
                                                                 </Form>
                                                             </Modal.Content>
                                                             <Modal.Actions>
