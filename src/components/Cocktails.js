@@ -41,9 +41,27 @@ class Cocktails extends Component {
 
     filterCocktails = () => {
         if (this.state.filter !== '') {
-            let search = this.props.api_cocktails.filter(cocktail => {
-                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()) || cocktail)
-                    return true
+            let search = this.props.api_cocktails.filter(c => {
+                let include = false
+                if (c.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (c.category && c.category.toLowerCase().includes(this.state.filter.toLowerCase()))) {
+                    include = true
+                }
+                for (let i = 1; i < 16; i++) {
+                    if (c[`ingredient_${i}`] === '' || c[`ingredient_${i}`] === ' ' || c[`ingredient_${i}`] === null || c[`ingredient_${i}`] === undefined) {
+                        break
+                    }
+                    if (c[`ingredient_${i}`]) {
+                        if (c[`ingredient_${i}`].toLowerCase().includes(this.state.filter.toLowerCase())) {
+                            include = true
+                            break
+                        }
+                    }
+                }
+                if (c.glass && c.glass.toLowerCase().includes(this.state.filter.toLowerCase()))
+                    include = true
+                if (c.alcoholic && c.alcoholic.toLowerCase().includes(this.state.filter.toLowerCase()))
+                    include = true
+                return include
             })
             return search
         } else {
@@ -53,9 +71,21 @@ class Cocktails extends Component {
 
     filterCustomCocktails =()=> {
         if (this.state.filter !== '') {
-            let search = this.props.custom_cocktails.filter( cocktail => {
-                if (cocktail.name.toLowerCase().includes(this.state.filter.toLowerCase()))
-                return true
+            let search = this.props.custom_cocktails.filter( c => {
+                let include = false
+                if (c.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (c.category && c.category.toLowerCase().includes(this.state.filter.toLowerCase()))) {
+                    include = true
+                }
+                for (let ingredient of c.ingredients) {
+                    if (ingredient.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (ingredient.category && ingredient.category.toLowerCase().includes(this.state.filter.toLowerCase()))) {
+                        include = true
+                    }
+                }
+                if (c.glass && c.glass.toLowerCase().includes(this.state.filter.toLowerCase()))
+                    include = true
+                if (c.alcoholic && c.alcoholic.toLowerCase().includes(this.state.filter.toLowerCase()))
+                    include = true
+                return include
             })
             return search
         } else  {
