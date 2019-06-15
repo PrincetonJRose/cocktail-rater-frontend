@@ -26,7 +26,9 @@ class NavBar extends Component {
                         </Link>
                     </div>
                     <div className="right menu">
-                        <Search placeholder="Search..." className="item"/>
+                        <Link to="/search/" className="item" style={{ color: `black` }} >
+                            <div className="content">Search <i className="icon search"></i></div>
+                        </Link>
                         {
                             this.props.current_user ?
                             <Link to="/" className="item" style={{ color: 'black' }}

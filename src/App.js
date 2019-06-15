@@ -7,6 +7,7 @@ import Ingredients from './components/Ingredients'
 import Homepage from './components/Homepage'
 import Register from './components/Register'
 import Mainpage from './components/Mainpage'
+import Search from './components/Search'
 import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getUser, getIngredients, getCocktails, getApiCocktails } from './services/APICalls'
@@ -45,6 +46,8 @@ class App extends Component {
                                                 <Cocktails/>))}/> */}
           <Route exact path="/ingredients/*" component={Ingredients} />
           <Route exact path="/ingredients" component={Ingredients} />
+          <Route exact path="/search/*" component={Search} />
+          <Route exact path="/search" component={Search} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/home" component={Homepage} />
           <Route exact path="/register" component={Register} />
