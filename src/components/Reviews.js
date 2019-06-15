@@ -10,7 +10,7 @@ class Reviews extends Component {
                 {
                     c.reviews.map( review => {
                         return (
-                            <div style={{ borderStyle: `dashed`, borderRadius: `12px`, borderColor: `purple` }}>
+                            <div style={{ borderStyle: `double`, borderRadius: `12px`, borderColor: `pink` }}>
                                 <div style={{ marginLeft: `10px`, marginRight: `10px` }}><b><u>User</u>:</b> {'  '}{review.user_name}</div>
                                 <div style={{ marginLeft: `10px`, marginRight: `10px` }}><b><u>Rating</u>:</b> {'  '}{review.rating}</div>
                                 <div style={{ marginLeft: `10px`, marginRight: `10px` }}><b><u>Content</u>:</b>{'  '}{review.content}</div>

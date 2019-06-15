@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 class Homepage extends Component {
     
     render() {
-        if (this.props.jwt_user) {
+        if (this.props.current_user) {
             return (
                 <div>
                     Homepage
@@ -19,7 +19,8 @@ class Homepage extends Component {
 
 let mapStateToProps =(state)=> {
     return {
-        jwt_user: state.users.jwt_user
+        jwt_user: state.users.jwt_user,
+        current_user: state.users.current_user,
     }
 }
 

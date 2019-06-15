@@ -5,6 +5,7 @@ const ingredientsUrl = `http://localhost:3000/ingredients/`
 const apiCocktailsUrl = `http://localhost:3000/api_cocktail_infos/`
 const usersUrl = `http://localhost:3000/users/`
 const reviewsUrl = `http://localhost:3000/reviews/`
+const likesUrl = `http://localhost:3000/likes/`
 const loginUrl = `http://localhost:3000/login/`
 
 export function getApiCocktails() {
@@ -79,8 +80,6 @@ export function updateReview(review, jwt_user) {
 }
 
 export function createReview(review, jwt_user) {
-    console.log(jwt_user)
-    console.log(jwt_decode(jwt_user))
     return fetch(reviewsUrl, {
             method: 'POST',
             headers: {
@@ -102,8 +101,34 @@ export function deleteReview(review, jwt_user) {
                 Accept: "application/json",
                 'JWT-Auth-Key': jwt_user,
             },
-            body: JSON.stringify(review)
         })
         .catch(errors => console.log(errors))
         .then(res => res.json())
+}
+
+export function createLike(like, jwt_user) {
+    return fetch(likesUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            'JWT-Auth-Key': jwt_user,
+        },
+        body: JSON.stringify(like)
+    })
+    .catch(errors => console.log(errors))
+    .then(res => res.json())
+}
+
+export function deleteLike(like, jwt_user) {
+    return fetch(likesUrl + like.id, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            'JWT-Auth-Key': jwt_user,
+        },
+    })
+    .catch(errors => console.log(errors))
+    .then(res => res.json())
 }
