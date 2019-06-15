@@ -4,12 +4,12 @@ import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Form, T
 import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
 import jwt_decode from 'jwt-decode'
-import { createReview, deleteReview, updateReview, getUser, getIngredient } from '../services/APICalls'
+import { createReview, deleteReview, updateReview, getUser, getIngredient, createLike, deleteLike } from '../services/APICalls'
 
 class CocktailInfo extends Component {
     constructor() {
         super()
-        this.state = { modalToggle: false, review: {}, userLike: false}
+        this.state = { modalToggle: false, review: {}, }
     }
 
     componentDidMount() {
@@ -27,7 +27,7 @@ class CocktailInfo extends Component {
     
     handleEdit =()=> {
         updateReview(this.state.review, this.props.jwt_user).then(data => {
-            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+            this.setCocktail(data)
         })
     }
     
@@ -40,20 +40,24 @@ class CocktailInfo extends Component {
                 review = { ...review, cocktail_id: this.props.cocktail.id, api_cocktail_info_id: null}
             }
             createReview(review, this.props.jwt_user).then( data => {
-                this.checkData(data)
+                this.setCocktail(data)
             }
         )})
     }
 
     handleDelete =()=> {
         deleteReview(this.state.review, this.props.jwt_user).then( data => {
-            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+            this.setCocktail(data)
         })
     }
 
-    checkData =(data)=> {
-        if (data.error || data.errors) {
-            
+    setCocktail =(data)=> {
+        if (data.errors || data.error) {
+            if (data.errors) {
+                console.log(data.errors)
+            } else {
+                console.log(data.error)
+            }
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
         }
@@ -126,9 +130,44 @@ class CocktailInfo extends Component {
             c.reviews.map( review => {
                 avg += review.rating
             })
-            avg = avg/c.reviews.length
+            avg = +((avg / c.reviews.length).toFixed(1))
         }
         return avg
+    }
+
+    checkUserLiked =()=> {
+        let liked
+        this.props.cocktail.likes.map( like => {
+            if (this.props.jwt_user && like.user_id === jwt_decode(this.props.jwt_user).user_id) {
+                liked = true
+                this.props.dispatch({ type: "SET_USER_LIKE", userLike: like })
+            }
+        })
+        if (this.props.userLike || liked) {
+            return "heart"
+        } else {
+            return "empty heart"
+        }
+    }
+
+    toggleLike =()=> {
+        if (this.props.userLike) {
+            deleteLike(this.props.userLike, this.props.jwt_user).then( data => {
+                this.setCocktail(data)
+                this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
+            })
+        } else {
+            let like = {}
+            like.user_id = jwt_decode(this.props.jwt_user).user_id
+            if (this.props.cocktail.api_cocktail_id) {
+                like.api_cocktail_info_id = this.props.cocktail.id
+            } else {
+                like.cocktail_id = this.props.cocktail.id
+            }
+            createLike(like, this.props.jwt_user).then( data => {
+                this.setCocktail(data)
+            })
+        }
     }
 
     render() {
@@ -165,7 +204,16 @@ class CocktailInfo extends Component {
                                     <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
                                     <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
                                     <Menu.Item><b><u>Video tutorial</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
-                                    <Menu.Item><b><u>Likes</u>:</b>{'  ' + c.likes.length} <Button basic color="red" circular icon="empty heart" /></Menu.Item>
+                                    <Menu.Item ><b><u>Likes</u>:</b>{'  ' + c.likes.length}
+                                        { this.props.current_user ?
+                                            <span style={{ justifyContent: `right`, textAlign: `right` }}>
+                                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                                                <Button basic color="red" onClick={()=> this.toggleLike()} icon={this.checkUserLiked()} />
+                                            </span>
+                                        :
+                                            null
+                                        }
+                                    </Menu.Item>
                                     <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
                                     <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
                                 </Menu>
@@ -203,7 +251,7 @@ class CocktailInfo extends Component {
                         </GridColumn>
                     </GridRow>
                     {
-                        this.props.jwt_user ?
+                        this.props.current_user ?
                             <GridRow centered>
                                 <GridColumn width={12} >
                                     <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
@@ -217,7 +265,7 @@ class CocktailInfo extends Component {
                                                         <Modal dimmer="blurring" size="large" closeIcon onClose={()=> {
                                                             this.toggleModal()
                                                             this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
-                                                        }} basic  open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
+                                                        }}   open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
                                                             this.toggleModal()
                                                             }}>Edit Your Review</Button>}>
                                                             <Modal.Header>Your review:</Modal.Header>
@@ -241,7 +289,7 @@ class CocktailInfo extends Component {
                                                             </Modal.Actions>
                                                         </Modal>
                                                     :
-                                                        <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()} basic  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
+                                                        <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()}  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
                                                         <Modal.Header>Your review:</Modal.Header>
                                                         <Modal.Content scrolling>
                                                             <Form size="large">
@@ -283,7 +331,9 @@ let mapStateToProps =(state)=> {
         jwt_user: state.users.jwt_user,
         cocktail: state.cocktails.cocktail,
         userReview: state.cocktails.userReview,
-        ingredients: state.ingredients.ingredients
+        ingredients: state.ingredients.ingredients,
+        userLike: state.cocktails.userLike,
+        current_user: state.users.current_user,
     }
 }
 

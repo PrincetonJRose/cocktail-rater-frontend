@@ -28,6 +28,7 @@ class App extends Component {
         this.props.dispatch({ type: "SET_USER", user: userData })
       })
     }
+    
   }
 
   render() {
