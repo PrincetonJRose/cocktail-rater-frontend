@@ -1,8 +1,9 @@
 import React, { Component } from  'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Button, Container, Divider, Grid, Header, Icon, Image, List, Menu, Responsive, Segment, Sidebar, Visibility, Input, Search, } from 'semantic-ui-react'
 
-class Search extends Component {
+class SearchBar extends Component {
     constructor() {
         super()
         this.state = { }
@@ -11,7 +12,7 @@ class Search extends Component {
     render() {
         return (
             <div>
-                Search
+                <Search />
             </div>
         )
     }
