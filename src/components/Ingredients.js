@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getIngredient } from '../services/APICalls'
-import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Form, Table, Input } from 'semantic-ui-react'
+import { Segment, Grid, GridRow, GridColumn, Menu, Input } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import IngredientInfo from './IngredientInfo'
 import CocktailInfo from './CocktailInfo'

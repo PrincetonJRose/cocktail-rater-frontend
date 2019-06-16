@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import { Search, Image } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import jwt_decode from 'jwt-decode'
 
 class NavBar extends Component {
     render() {
@@ -10,7 +11,7 @@ class NavBar extends Component {
         return (
             <div className="container">
                 <div className={menuClasses}>
-                    <Link to={this.props.current_user ? "/home" : "/"} className="item">
+                    <Link to="/home" className="item">
                         <h2 className="ui header">
                             <i className={iconClasses}></i>
                             <div className="content">Taste & Rate</div>
@@ -27,7 +28,7 @@ class NavBar extends Component {
                     </div>
                     <div className="right menu">
                         { this.props.current_user?
-                            <Link to="/home" className="item" >
+                            <Link to={`/user_profile/${jwt_decode(this.props.jwt_user).user_id}`} className="item" >
                                 <div className="content" style={{ color: `black` }}>
                                     <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
                                 </div>
@@ -40,7 +41,7 @@ class NavBar extends Component {
                         </Link>
                         {
                             this.props.current_user ?
-                            <Link to="/" className="item" style={{ color: 'black' }}
+                            <Link to="/home" className="item" style={{ color: 'black' }}
                                     onClick={(e) => {
                                         localStorage.clear()
                                         this.props.dispatch({ type: "CLEAR_USER" })

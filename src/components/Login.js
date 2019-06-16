@@ -32,10 +32,10 @@ class Login extends Component {
             } else {
                 getUser(jwt_decode(data.jwt_user).user_id).then( userData => {
                     localStorage.setItem("jwt_user", data.jwt_user)
-                    this.props.dispatch({ type: "SET_USER", user: userData })
                     this.props.dispatch({ type: "SET_AUTH" })
+                    this.props.dispatch({ type: "SET_USER", user: userData })
+                    this.props.history.push(`/user_profile/${this.props.jwt_user}`)
                 })
-                this.props.history.push("/home")
             }
         })
         e.target.reset()

@@ -60,6 +60,19 @@ export function createUser(userInfo) {
         .then(res => res.json())
 }
 
+export function updateUser(user, jwt_user) {
+    return fetch(usersUrl + jwt_decode(jwt_user).user_id, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                'JWT-Auth-Key': jwt_user,
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+}
+
 export function getLocal() {
     return fetch(localUrl)
         .then(res => res.json())

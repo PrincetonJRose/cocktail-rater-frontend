@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Form, Table, Input } from 'semantic-ui-react'
+import { Segment, Grid, GridRow, GridColumn, Menu, Table, } from 'semantic-ui-react'
 import jwt_decode from 'jwt-decode'
 import { getApiCocktail, getCocktail } from '../services/APICalls'
 

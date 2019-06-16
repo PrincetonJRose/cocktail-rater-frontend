@@ -4,7 +4,7 @@ import { Segment, Image, Grid, GridRow, GridColumn, Menu, Button, Modal, Form, T
 import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
 import jwt_decode from 'jwt-decode'
-import { createReview, deleteReview, updateReview, getUser, getIngredient, createLike, deleteLike } from '../services/APICalls'
+import { createReview, getUser, getIngredient, createLike, deleteLike } from '../services/APICalls'
 
 class CocktailInfo extends Component {
     constructor() {
@@ -25,12 +25,6 @@ class CocktailInfo extends Component {
         this.setState({ modalToggle: !this.state.modalToggle })
     }
     
-    handleEdit =()=> {
-        updateReview(this.state.review, this.props.jwt_user).then(data => {
-            this.setCocktail(data)
-        })
-    }
-    
     handleCreate =()=> {
         getUser(jwt_decode(this.props.jwt_user).user_id).then( user => {
             let review = {...this.state.review, user_id: user.id, user_name: user.username }
@@ -43,12 +37,6 @@ class CocktailInfo extends Component {
                 this.setCocktail(data)
             }
         )})
-    }
-
-    handleDelete =()=> {
-        deleteReview(this.state.review, this.props.jwt_user).then( data => {
-            this.setCocktail(data)
-        })
     }
 
     setCocktail =(data)=> {
@@ -175,7 +163,6 @@ class CocktailInfo extends Component {
         const c = this.props.cocktail
         let ingredients = this.listIngredients(c)
         
-        // this.checkReviews(c)
         let average = this.getAverageRating(c)
         const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
             key: number,
@@ -208,7 +195,7 @@ class CocktailInfo extends Component {
                                         { this.props.current_user ?
                                             <span style={{ justifyContent: `right`, textAlign: `right` }}>
                                                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                                <Button basic color="red" onClick={()=> this.toggleLike()} icon={this.checkUserLiked()} />
+                                                <Button basic circular color="red" onClick={()=> this.toggleLike()} icon={this.checkUserLiked()} />
                                             </span>
                                         :
                                             null
@@ -261,54 +248,27 @@ class CocktailInfo extends Component {
                                             <Reviews c={c}/>
                                         }
                                         <div><br></br></div>
-                                                {
-                                                    this.props.userReview ?
-                                                        <Modal dimmer="blurring" size="large" closeIcon onClose={()=> {
-                                                            this.toggleModal()
-                                                            this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
-                                                        }}   open={this.state.modalToggle} trigger={<Button primary onClick={()=> {
-                                                            this.setState({ review: this.props.userReview })
-                                                            this.toggleModal()
-                                                            }}>Edit Your Review</Button>}>
-                                                            <Modal.Header>Your review:</Modal.Header>
-                                                            <Modal.Content scrolling>
-                                                                <Form size="large">
-                                                                    <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} value={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required error/>
-                                                                    <br></br>
-                                                                    <div><p></p></div>
-                                                                    <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" value={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required error/>
-                                                                </Form>
-                                                            </Modal.Content>
-                                                            <Modal.Actions>
-                                                                <Button positive onClick={()=>{
-                                                                    this.toggleModal()
-                                                                    this.handleEdit()
-                                                                    }}>Submit Changes!</Button>
-                                                                <Button negative onClick={()=>{
-                                                                    this.toggleModal()
-                                                                    this.handleDelete()
-                                                                    }}>Delete Review</Button>
-                                                            </Modal.Actions>
-                                                        </Modal>
-                                                    :
-                                                        <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()}  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
-                                                        <Modal.Header>Your review:</Modal.Header>
-                                                        <Modal.Content scrolling>
-                                                            <Form size="large">
-                                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
-                                                                <br></br>
-                                                                <div><p></p></div>
-                                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
-                                                            </Form>
-                                                        </Modal.Content>
-                                                        <Modal.Actions>
-                                                            <Button positive onClick={()=>{
-                                                                this.toggleModal()
-                                                                this.handleCreate()
-                                                                }}>Submit Review!</Button>
-                                                        </Modal.Actions>
-                                                    </Modal>
-                                                }
+                                        { this.props.userReview?
+                                            null
+                                            :
+                                                <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()}  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
+                                                <Modal.Header>Your review:</Modal.Header>
+                                                <Modal.Content scrolling>
+                                                    <Form size="large">
+                                                        <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
+                                                        <br></br>
+                                                        <div><p></p></div>
+                                                        <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
+                                                    </Form>
+                                                </Modal.Content>
+                                                <Modal.Actions>
+                                                    <Button positive onClick={()=>{
+                                                        this.toggleModal()
+                                                        this.handleCreate()
+                                                        }}>Submit Review!</Button>
+                                                </Modal.Actions>
+                                            </Modal>
+                                        }
                                     </Segment>
                                 </GridColumn>
                             </GridRow>

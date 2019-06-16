@@ -4,9 +4,9 @@ import NavBar from './components/NavBar'
 import Login from './components/Login'
 import Cocktails from './components/Cocktails'
 import Ingredients from './components/Ingredients'
-import Homepage from './components/Homepage'
+import ProfilePage from './components/ProfilePage'
 import Register from './components/Register'
-import Mainpage from './components/Mainpage'
+import HomePage from './components/HomePage'
 import SearchBar from './components/SearchBar'
 import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -49,9 +49,11 @@ class App extends Component {
           <Route exact path="/search/*" component={SearchBar} />
           <Route exact path="/search" component={SearchBar} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/home" component={Homepage} />
           <Route exact path="/register" component={Register} />
-          <Route exact path="/" component={Mainpage} />
+          <Route exact path="/user_profile/*" component={ProfilePage} />
+          <Route exact path="/user_profile" component={ProfilePage} />
+          <Route exact path="/home" component={HomePage} />
+          <Route exact path="/" component={HomePage} />
         </Switch>
       </div>
     )
