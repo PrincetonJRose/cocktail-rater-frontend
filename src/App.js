@@ -8,6 +8,7 @@ import ProfilePage from './components/ProfilePage'
 import Register from './components/Register'
 import HomePage from './components/HomePage'
 import SearchBar from './components/SearchBar'
+import CreateCocktail from './components/CreateCocktail'
 import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getUser, getIngredients, getCocktails, getApiCocktails } from './services/APICalls'
@@ -37,6 +38,7 @@ class App extends Component {
       <div className="App container" style={{ width: `100vw`, height: `100vh`, overflow: `hidden`}}>
         <NavBar />
         <Switch>
+          <Route exact path="/cocktails/new" component={CreateCocktail} />
           <Route exact path="/cocktails/*" component={Cocktails} />
           <Route exact path="/cocktails" component={Cocktails} />
           {/* <Route exact path="/cocktails/" render={()=>(

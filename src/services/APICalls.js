@@ -28,6 +28,44 @@ export function getCocktail(id) {
         .then(res => res.json())
 }
 
+export function createCocktail(cocktail, jwt_user) {
+    return fetch(cocktailsUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            'JWT-Auth-Key': jwt_user,
+        },
+        body: JSON.stringify(cocktail)
+    })
+    .then(res => res.json())
+}
+
+export function updateCocktail(cocktail, jwt_user) {
+    return fetch(cocktailsUrl + cocktail.id, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            'JWT-Auth-Key': jwt_user,
+        },
+        body: JSON.stringify(cocktail)
+    })
+    .then(res => res.json())
+}
+
+export function deleteCocktail(cocktail, jwt_user) {
+    return fetch(cocktailsUrl + cocktail.id, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            'JWT-Auth-Key': jwt_user,
+        },
+    })
+    .then(res => res.json())
+}
+
 export function getIngredients() {
     return fetch(ingredientsUrl)
         .then(res => res.json())
@@ -88,7 +126,6 @@ export function updateReview(review, jwt_user) {
             },
             body: JSON.stringify(review)
         })
-        .catch(errors => console.log(errors))
         .then(res => res.json())
 }
 
@@ -102,7 +139,6 @@ export function createReview(review, jwt_user) {
             },
             body: JSON.stringify(review)
         })
-        .catch(errors => console.log(errors))
         .then(res => res.json())
 }
 
@@ -115,7 +151,6 @@ export function deleteReview(review, jwt_user) {
                 'JWT-Auth-Key': jwt_user,
             },
         })
-        .catch(errors => console.log(errors))
         .then(res => res.json())
 }
 

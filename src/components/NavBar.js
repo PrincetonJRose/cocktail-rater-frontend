@@ -6,14 +6,12 @@ import jwt_decode from 'jwt-decode'
 
 class NavBar extends Component {
     render() {
-        const menuClasses = `ui inverted pink menu`
-        const iconClasses = `icon cocktail`
         return (
             <div className="container">
-                <div className={menuClasses}>
+                <div className="ui inverted pink menu">
                     <Link to="/home" className="item">
                         <h2 className="ui header">
-                            <i className={iconClasses}></i>
+                            <i className="icon cocktail"></i>
                             <div className="content">Taste & Rate</div>
                             <div className="sub header" style={{ textAlign: `center` }}>Come to taste. Stay to rate.</div>
                         </h2>
@@ -25,6 +23,12 @@ class NavBar extends Component {
                         <Link to="/ingredients/" className="item" style={{ color: 'black' }} >
                             <div className="content">Ingredients</div>
                         </Link>
+                        { this.props.current_user ?
+                            <Link to="/cocktails/new" className="item" style={{ color: `black` }} >
+                                <div className="content">Create Cocktail</div>
+                            </Link>
+                            : null
+                        }
                     </div>
                     <div className="right menu">
                         { this.props.current_user?
