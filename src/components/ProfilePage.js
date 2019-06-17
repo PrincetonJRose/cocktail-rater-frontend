@@ -146,7 +146,7 @@ class Homepage extends Component {
                                             <Modal.Content image scrolling>
                                             <Image size='medium' src={this.state.user.img_url} wrapped />
                                             <Modal.Description>
-                                                <Header>Enter in new information here</Header>
+                                                <Header>Update information:</Header>
                                                 <Form fluid>
                                                     <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, username: e.target.value} })} value={this.state.user.username} label="User name:" required/>
                                                     <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, email: e.target.value} })} value={this.state.user.email} label="Email:" required/>

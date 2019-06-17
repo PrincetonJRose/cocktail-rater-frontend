@@ -37,7 +37,7 @@ class HomePage extends Component {
                             { this.props.current_user ?
                                 null
                                 :
-                                <Link to='/login' ><Button size='huge'>Click here to get started <Icon name="chevron right" /></Button></Link>
+                                <Link to='/login' ><Button primary size='huge'>Click here to get started <Icon name="chevron right" /></Button></Link>
                             }
                         </Grid.Column>
                     </Grid.Row>
