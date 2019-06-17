@@ -106,11 +106,11 @@ class Homepage extends Component {
     render() {
         if (this.props.current_user) {
             return (
-                <Segment style={{ padding: '4em 0em' }} vertical>
+                <Segment style={{ padding: '4em 0em' }} vertical  verticalAlign='middle'>
                     <Grid container stackable verticalAlign='middle'>
-                        <Grid.Row>
-                            <Grid.Column floated='left' width={6}>
-                                <Card floated="right">
+                        <Grid.Row  verticalAlign='middle'>
+                            <Grid.Column floated='left' width={6}  verticalAlign='middle'>
+                                <Card floated="right"  verticalAlign='middle'>
                                     <Image size="medium" src={this.props.current_user.img_url} wrapped ui={false} />
                                     <Card.Content>
                                     <Card.Header textAlign="center">{this.props.current_user.username}</Card.Header>
@@ -135,6 +135,7 @@ class Homepage extends Component {
                                         <Modal 
                                             open={this.state.modalFormOpen}
                                             onClose={this.handleFormClose}
+                                            closeIcon
                                             trigger={<a onClick={()=> {
                                                 this.handleFormOpen()
                                                 let user = this.props.current_user
@@ -169,6 +170,7 @@ class Homepage extends Component {
                                                 open={this.state.modalOpen}
                                                 onClose={this.handleClose}
                                                 basic
+                                                closeIcon
                                                 size='small'
                                             >
                                                 <Header icon='user' content='Enter your password:' />
@@ -208,8 +210,8 @@ class Homepage extends Component {
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
-                            <Grid.Column centered width={8}>
-                                <Segment scrollable>
+                            <Grid.Column centered width={8} verticalAlign='middle'>
+                                <Segment scrollable scrolling verticalAlign='middle'>
                                     <div className="content"><h3>Concoctions you've shared:</h3></div>
                                         {
                                             this.props.current_user.cocktails.length > 0 ?

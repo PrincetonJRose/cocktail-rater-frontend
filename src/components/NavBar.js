@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import jwt_decode from 'jwt-decode'
+import CreateCocktail from './CreateCocktail'
 
 class NavBar extends Component {
     render() {

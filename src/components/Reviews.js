@@ -10,8 +10,8 @@ class Reviews extends Component {
         this.state = { modalToggle: false, review: {}, errors: [] }
     }
 
-    handleOpen =()=> this.setState({ modalToggle: true })
-    handleClose =()=> this.setState({ modalToggle: false })
+    handleEditOpen =()=> this.setState({ modalToggle: true })
+    handleEditClose =()=> this.setState({ modalToggle: false })
 
     handleDelete =()=> {
         deleteReview(this.state.review, this.props.jwt_user).then( data => {
@@ -19,7 +19,7 @@ class Reviews extends Component {
         })
     }
     
-    handleEdit =()=> {
+    handleUpdate =()=> {
         updateReview(this.state.review, this.props.jwt_user).then(data => {
             this.setCocktail(data)
         })
@@ -34,7 +34,7 @@ class Reviews extends Component {
             }
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
-            this.handleClose()
+            this.handleEditClose()
         }
     }
 
@@ -63,7 +63,7 @@ class Reviews extends Component {
                                 { this.props.userReview && review.id === this.props.userReview.id ?
                                     <Comment.Action textAlign="right" onClick={()=> {
                                         this.setState({ review: this.props.userReview })
-                                        this.handleOpen()
+                                        this.handleEditOpen()
                                     }}>Edit</Comment.Action>
                                     : null
                                 }
@@ -72,7 +72,7 @@ class Reviews extends Component {
                                 dimmer="blurring"
                                 size="large"
                                 closeIcon
-                                onClose={this.handleClose}
+                                onClose={this.handleEditClose}
                                 open={this.state.modalToggle}
                             >
                                 <Modal.Header>Your review:</Modal.Header>
@@ -91,7 +91,7 @@ class Reviews extends Component {
                                         null
                                     }
                                     <Button positive onClick={()=>{
-                                        this.handleEdit()
+                                        this.handleUpdate()
                                     }}>Submit Changes!</Button>
                                     <Button negative onClick={()=>{
                                         this.handleDelete()
