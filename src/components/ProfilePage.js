@@ -19,7 +19,6 @@ class Homepage extends Component {
                 img_url: '',
                 password_confirmation: '',
             },
-            errors: [],
             loading: false,
             modalOpen: false,
             modalFormOpen: false,
@@ -52,7 +51,7 @@ class Homepage extends Component {
     submitChanges =()=> {
         updateUser(this.state.user, this.props.jwt_user).then( data => {
             if (data.errors) {
-                this.setState({ errors: data.errors, modalErrorOpen: true })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
             } else {
                 this.props.dispatch({ type: "SET_USER", user: data })
                 this.handleFormClose()
@@ -159,8 +158,8 @@ class Homepage extends Component {
                                             </Modal.Description>
                                             </Modal.Content>
                                             <Modal.Actions>
-                                                { this.state.errors.length > 0 ?
-                                                    <ErrorModal open={true} errors={this.state.errors} />
+                                                { this.props.errors.length > 0 ?
+                                                    <ErrorModal open={true} errors={this.props.errors} />
                                                     :
                                                     null
                                                 }
@@ -269,6 +268,7 @@ let mapStateToProps =(state)=> {
         current_user: state.users.current_user,
         api_cocktails: state.cocktails.api_cocktails,
         custom_cocktails: state.cocktails.custom_cocktails,
+        errors: state.users.errors,
     }
 }
 

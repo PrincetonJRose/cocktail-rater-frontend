@@ -7,7 +7,7 @@ import ErrorModal from './ErrorModal'
 class Reviews extends Component {
     constructor() {
         super()
-        this.state = { modalToggle: false, review: {}, errors: [] }
+        this.state = { modalToggle: false, review: {}, }
     }
 
     handleEditOpen =()=> this.setState({ modalToggle: true })
@@ -28,9 +28,9 @@ class Reviews extends Component {
     setCocktail =(data)=> {
         if (data.errors || data.error) {
             if (data.errors) {
-                this.setState({ errors: data.errors })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
             } else {
-                this.setState({ errors: [...this.state.errors, data.error] })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
             }
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
@@ -85,8 +85,8 @@ class Reviews extends Component {
                                     </Form>
                                 </Modal.Content>
                                 <Modal.Actions>
-                                    { this.state.errors.length > 0 ?
-                                        <ErrorModal open={true} errors={this.state.errors} />
+                                    { this.props.errors.length > 0 ?
+                                        <ErrorModal open={true} errors={this.props.errors} />
                                         :
                                         null
                                     }
@@ -111,6 +111,7 @@ let mapStateToProps =(state)=> {
     return {
         userReview: state.cocktails.userReview,
         jwt_user: state.users.jwt_user,
+        errors: state.users.errors,
     }
 }
 

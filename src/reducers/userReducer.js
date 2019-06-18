@@ -1,4 +1,4 @@
-export default (state = { current_user: null, jwt_user: null }, action) => {
+export default (state = { current_user: null, jwt_user: null, errors: [] }, action) => {
     switch (action.type) {
         case "SET_USER": {
             return {
@@ -22,6 +22,11 @@ export default (state = { current_user: null, jwt_user: null }, action) => {
         case "CLEAR_AUTH": {
             return {
                 ...state, jwt_user: null
+            }
+        }
+        case "SET_ERRORS": {
+            return {
+                ...state, errors: action.errors
             }
         }
         default: return state
