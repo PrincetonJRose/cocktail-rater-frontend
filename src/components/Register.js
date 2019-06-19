@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Form, Grid, Button, Segment, Header, Message } from 'semantic-ui-react'
 import { createUser, getUser } from '../services/APICalls'
+import jwt_decode from 'jwt-decode'
 
 class Register extends Component {
     constructor() {
@@ -25,22 +26,21 @@ class Register extends Component {
 
     handleSubmit =(e)=> {
         e.preventDefault()
-        createUser(this.state)
-            .then(data => {
-                if (data.errors) {
-                    this.setState({ errors: data.errors, loading: false })
-                } else {
-                    this.loginNewUser(data)
-                }
-            })
-        e.target.reset()
+        createUser(this.state).then(data => {
+            if (data.errors) {
+                this.setState({ errors: data.errors, loading: false })
+            } else {
+                this.loginNewUser(data)
+            }
+        })
     }
 
     loginNewUser =(user)=> {
         fetch("http://localhost:3000/login", {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
+                "Content-Type": "application/json",
+                Accept: "application/json",
             },
             body: JSON.stringify(this.state.user)
         })
@@ -49,11 +49,11 @@ class Register extends Component {
             if (data.errors) {
                 this.setState({ errors: data.errors, loading: false })
             } else {
-                getUser(user.id).then( userData => {
-                    this.props.dispatch({ type: "SET_USER", user: userData })
+                getUser(jwt_decode(data.jwt_user).user_id).then( userData => {
                     localStorage.setItem("jwt_user", data.jwt_user)
+                    this.props.dispatch({ type: "SET_AUTH" })
+                    this.props.dispatch({ type: "SET_USER", user: userData })
                 })
-                this.props.dispatch({ type: "SET_AUTH" })
                 this.props.history.push("/home")
             }
         })

@@ -214,14 +214,16 @@ class Homepage extends Component {
                             <Grid.Column centered width={8} verticalAlign='middle'>
                                 <Segment raised scrollable scrolling verticalAlign='middle'>
                                     <div className="content"><h3>Concoctions you've shared:</h3></div>
-                                    <div className="sub-content"><p>&emsp;&emsp;( Click on one to edit it )</p></div>
                                         {
                                             this.props.current_user.cocktails.length > 0 ?
-                                            <Menu fluid vertical>
-                                                {this.props.current_user.cocktails.map( cocktail => {
-                                                    return <Menu.Item onClick={() => this.editCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
-                                                })}
-                                            </Menu>
+                                            <div>
+                                                <div className="sub header"><p>&emsp;&emsp;( Click on one to edit it )</p></div>
+                                                <Menu fluid vertical>
+                                                    {this.props.current_user.cocktails.map( cocktail => {
+                                                        return <Menu.Item onClick={() => this.editCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
+                                                    })}
+                                                </Menu>
+                                            </div>
                                             :
                                             <div className="sub-content">( Unlock your inner mad scientist, then get out there and start experimenting! )</div>
                                         }

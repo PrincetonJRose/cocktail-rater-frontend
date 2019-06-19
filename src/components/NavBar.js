@@ -24,27 +24,27 @@ class NavBar extends Component {
                         <Link to="/ingredients/" className="item" style={{ color: 'black' }} >
                             <div className="content">Ingredients</div>
                         </Link>
-                        { this.props.current_user ?
-                            <Link to="/cocktails/new" className="item" style={{ color: `black` }} >
-                                <div className="content">Create Cocktail</div>
-                            </Link>
+                        {
+                            this.props.current_user ?
+                                <Link to="/cocktails/new" className="item" style={{ color: `black` }} >
+                                    <div className="content">Create Cocktail</div>
+                                </Link>
                             : null
                         }
                     </div>
                     <div className="right menu">
-                        { this.props.current_user?
-                            <Link to={`/user_profile/${jwt_decode(this.props.jwt_user).user_id}`} className="item">
-                                <div className="content" style={{ color: `black` }} onClick={()=>{
-                                        if (localStorage.getItem("jwt_user")) {
-                                            getUser(jwt_decode(localStorage.getItem("jwt_user")).user_id).then( userData => {
-                                                this.props.dispatch({ type: "SET_USER", user: userData })
-                                            })
-                                        }
-                                }}>
-                                    <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
-                                </div>
-                            </Link>
-                        :
+                        {
+                            this.props.jwt_user && this.props.current_user ?
+                                <Link to={`/user_profile/${jwt_decode(this.props.jwt_user).user_id}`} className="item">
+                                    <div className="content" style={{ color: `black` }} onClick={()=>{
+                                                getUser(jwt_decode(this.props.jwt_user).user_id).then( userData => {
+                                                    this.props.dispatch({ type: "SET_USER", user: userData })
+                                                })
+                                            }}>
+                                        <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
+                                    </div>
+                                </Link>
+                            :
                             null
                         }
                         <Link to="/search/" className="item" style={{ color: `black` }} >
@@ -52,21 +52,21 @@ class NavBar extends Component {
                         </Link>
                         {
                             this.props.current_user ?
-                            <Link to="/home" className="item" style={{ color: 'black' }}
-                                    onClick={(e) => {
-                                        localStorage.clear()
-                                        this.props.dispatch({ type: "CLEAR_USER" })
-                                        this.props.dispatch({ type: "CLEAR_AUTH" })
-                                        this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
-                                        this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
-                                        this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
-                                        }} >
-                                    <div className="content">Logout</div>
-                            </Link> 
-                            :
-                            <Link to="/login" className="item" style={{ color: 'black' }} >
-                                <div className="content">Login</div>
-                            </Link>
+                                <Link to="/home" className="item" style={{ color: 'black' }}
+                                        onClick={(e) => {
+                                            localStorage.clear()
+                                            this.props.dispatch({ type: "CLEAR_USER" })
+                                            this.props.dispatch({ type: "CLEAR_AUTH" })
+                                            this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
+                                            this.props.dispatch({ type: "SET_USER_LIKE", userLike: null })
+                                            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
+                                            }} >
+                                        <div className="content">Logout</div>
+                                </Link> 
+                                :
+                                <Link to="/login" className="item" style={{ color: 'black' }} >
+                                    <div className="content">Login</div>
+                                </Link>
                         }
 
                     </div>

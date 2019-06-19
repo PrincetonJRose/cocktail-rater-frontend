@@ -11,9 +11,9 @@ class SearchBar extends Component {
 
     render() {
         return (
-            <div>
-                <Search />
-            </div>
+            <Segment verticalAlign="center">
+                Coming Soon!!!
+            </Segment>
         )
     }
 }
