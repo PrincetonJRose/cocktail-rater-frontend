@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Button, Grid, Header, Icon, Image, Form, Modal, Dropdown } from 'semantic-ui-react'
 import { createCocktail, updateCocktail, getCocktails } from '../services/APICalls'
 import ErrorModal from './ErrorModal'
+import jwt_decode from 'jwt-decode'
 
 class CreateCocktail extends Component {
     constructor() {
@@ -14,7 +15,7 @@ class CreateCocktail extends Component {
                 category: '',
                 instructions: '',
                 glass: '',
-                videoUrl: '',
+                videoURL: '',
                 imageUrl: '',
                 ingredients: [],
                 measurements: [],
@@ -33,8 +34,41 @@ class CreateCocktail extends Component {
     setAlcoholic = (e, { value }) => this.setState({ cocktail: {...this.state.cocktail, alcoholic: value} })
 
     handleCreateOpen =()=> this.setState({ modalCreateOpen: true })
-    handleCreateClose =()=> this.setState({ modalCreateOpen: false })
+    
+    handleCreateClose =()=> {
+        if (this.props.editCocktail) {
+            this.props.dispatch({ type: "SET_EDIT_COCKTAIL", cocktailData: null })
+        }
+        this.setState({
+            modalCreateOpen: false,
+            cocktail: {
+                name: '',
+                alcoholic: '',
+                category: '',
+                instructions: '',
+                glass: '',
+                videoURL: '',
+                imageUrl: '',
+                ingredients: [],
+                measurements: [],
+                cocktail_ingredients: [],
+            },
+        })
+    }
 
+    handleEditCocktail =()=> {
+        updateCocktail(this.state.cocktail, this.props.jwt_user).then( data => {
+            if (data.errors) {
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
+                this.setState({ loading: false })
+            } else {
+                this.props.dispatch({ type: "SET_COCKTAILS", cocktailData: data })
+                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
+                this.setState({ loading: false, modalCreateOpen: false })
+            }
+        })
+    }
     
     handleCreateCocktail =()=> {
         createCocktail(this.state.cocktail, this.props.jwt_user).then( data => {
@@ -74,10 +108,13 @@ class CreateCocktail extends Component {
             value: choice,
         }))
 
+        // ingredients category list ["Beverage", "Fortified Wine", "Liquor", "Whisky", "Liqueur", "Brandy", nil, "Spirit", "Wine", "Whiskey", "Vodka", "Rum", "Syrup", "Fortified wine", "Aperitif", "Drink", "Fruit", "Cream", "Soft Drink", "Coffee", "Water", "Juice", "Beer", "Cider", "Schnapps", "liqueur", "Flower", "stout", "beverage"] 
+
         const alcoholic = this.state.cocktail.alcoholic
-        
+
         return (
-            <Modal 
+            <Modal
+                raised 
                 open={this.state.modalCreateOpen}
                 onClose={this.handleCreateClose}
                 closeIcon
@@ -85,48 +122,71 @@ class CreateCocktail extends Component {
                 trigger={
                     <Grid textAlign="center">
                         <Grid.Column verticalAlign="middle" >
-                            <Button size="huge" verticalAlign="middle"  onClick={()=> {this.handleCreateOpen()}} >
-                            <Icon name='cocktail' />Click here if you're ready to start mixing!</Button>
+                            {
+                                this.props.editCocktail && window.location.pathname.includes("/cocktails/edit") ?
+                                    <Button size="huge" verticalAlign="middle" 
+                                        onClick={()=> {
+                                            let cocktail = {...this.props.editCocktail, measurements: []}
+                                            cocktail.cocktail_ingredients.map( m => {
+                                                cocktail.measurements.push(m.measurement)
+                                            })
+                                            this.setState({ cocktail: cocktail })
+                                            this.handleCreateOpen()
+                                            }}
+                                    >
+                                    <Icon name='cocktail' />Click here for a remix!!!</Button>
+                                    :
+                                    <Button size="huge" verticalAlign="middle"  
+                                        onClick={()=> {
+                                            this.handleCreateOpen()
+                                            }}
+                                    >
+                                    <Icon name='cocktail' />Click here if you're ready to start mixing!</Button>
+                            }
                         </Grid.Column>
                     </Grid>
                 }
             >
                 {/* <Modal.Header>Add a new cocktail!</Modal.Header> */}
                 <Modal.Content image scrolling>
-                <Image fluid size='medium' src={this.state.cocktail.imageUrl} wrapped />
+                <Image raised fluid size='medium' src={this.state.cocktail.imageUrl} wrapped />
                 <Modal.Description>
-                    <Header>Enter Cocktail Information:</Header>
-                    <Form loading={this.state.loading}>
-                        <Form.Input fluid label={`Cocktail's name`} placeholder={'Enter name here...'} onChange={(e)=>this.setState({ cocktail: {...this.state.cocktail, name: e.target.value} })} required />
-                        <Form.Group widths='equal'>
-                            <Form.Select label={`Category?`} options={categories} placeholder='Type of drink' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required />
-                            <Form.Select label={`Drinking glass?`} options={glasses} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, glass: data.value} }) } required/>
+                    <Header raised >Enter Cocktail Information:</Header>
+                    <Form raised loading={this.state.loading}>
+                        <Form.Input  raised fluid label={`Cocktail's name`} placeholder={'Enter name here...'} onChange={(e)=>this.setState({ cocktail: {...this.state.cocktail, name: e.target.value} })} value={this.state.cocktail.name} required />
+                        <Form.Group  raised widths='equal'>
+                            <Form.Select label={`Category?`} options={categories} value={this.state.cocktail.category} placeholder='Type of drink' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required />
+                            <Form.Select label={`Drinking glass?`} options={glasses} value={this.state.cocktail.glass} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, glass: data.value} }) } required/>
                         </Form.Group>
                         <Form.Group inline>
                         <label>Alcohol content?&emsp;</label>
                             <Form.Radio
+                                raised 
                                 label='Alcoholic'
                                 value='Alcoholic'
                                 checked={alcoholic === 'Alcoholic'}
                                 onChange={this.setAlcoholic}
                             />
                             <Form.Radio
+                                raised 
                                 label='Non Alcoholic'
                                 value='Non Alcoholic'
                                 checked={alcoholic === 'Non Alcoholic'}
                                 onChange={this.setAlcoholic}
                             />
                             <Form.Radio
+                                raised 
                                 label='Optional'
                                 value='Optional'
                                 checked={alcoholic === 'Optional'}
                                 onChange={this.setAlcoholic}
                             />
                         </Form.Group>
-                        <Form.Input onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, imageUrl: e.target.value } })} value={this.state.cocktail.imageUrl} label="Image:" />
+                        <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, imageUrl: e.target.value } })} value={this.state.cocktail.imageUrl} label="Image:" />
+                        <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, videoURL: e.target.value } })} value={this.state.cocktail.videoURL} label="Instructional video (optional)" />
                         <label><strong>Ingredients & Measurements:</strong></label>
                         <br></br>
-                        <Dropdown placeholder='Choose flavors...' fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
+                        <Dropdown placeholder='Choose flavors...' raised fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
                         <br></br>
                         {
                             this.state.cocktail.ingredients.map((i, index) => {
@@ -145,17 +205,27 @@ class CreateCocktail extends Component {
                             })
                         }
                         <br></br>
-                        <Form.TextArea label='Instructions:' placeholder='How to mix this...' required onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, instructions: e.target.value} })}/>
+                        <Form.TextArea raised label='Instructions:' value={this.state.cocktail.instructions} placeholder='How to mix this...' required onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, instructions: e.target.value} })}/>
                         <br></br>
-                        <Form.Checkbox label='I acknowledge that this concoction is fun and amazing and ready to be shared!!!' required/>
-                        <Form.Button positive onClick={()=> {
-                            this.setState({ loading: true })
-                            this.handleCreateCocktail()
-                            } }><Icon name="smile"/>&emsp;Bottoms up!&emsp;<Icon name="smile"/></Form.Button>
+                        <Form.Checkbox raised label='I acknowledge that this concoction is fun and amazing and ready to be shared!!!' required/>
+                        <br></br>
+                        <br></br>
                     </Form>
                 </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
+                    {
+                        this.props.editCocktail && window.location.pathname.includes("/cocktails/edit") ?
+                            <Button raised positive onClick={()=> {
+                                this.setState({ loading: true })
+                                this.handleEditCocktail()
+                            } }><Icon name="clipboard check"/>&emsp;Remix!&emsp;</Button>
+                        :
+                            <Button raised positive onClick={()=> {
+                                this.setState({ loading: true })
+                                this.handleCreateCocktail()
+                            } }><Icon name="smile"/>&emsp;Bottoms up!&emsp;<Icon name="smile"/></Button>
+                    }
                     { this.props.errors.length > 0 ?
                         <ErrorModal open={true} errors={this.props.errors}/>
                         :
@@ -173,6 +243,7 @@ let mapStateToProps =(state)=> {
         jwt_user: state.users.jwt_user,
         ingredients: state.ingredients.ingredients,
         errors: state.users.errors,
+        editCocktail: state.cocktails.editCocktail,
     }
 }
 

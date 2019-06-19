@@ -1,4 +1,4 @@
-export default (state = { api_cocktails: [], custom_cocktails: [], cocktail: null, userReview: null, userLike: null }, action) => {
+export default (state = { api_cocktails: [], custom_cocktails: [], cocktail: null, userReview: null, userLike: null, editCocktail: null }, action) => {
     switch (action.type) {
         case "SET_API_DATA": {
             return {
@@ -23,6 +23,11 @@ export default (state = { api_cocktails: [], custom_cocktails: [], cocktail: nul
         case "SET_USER_LIKE": {
             return {
                 ...state, userLike: action.userLike
+            }
+        }
+        case "SET_EDIT_COCKTAIL": {
+            return {
+                ...state, editCocktail: action.cocktailData
             }
         }
         default: return state

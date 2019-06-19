@@ -123,7 +123,7 @@ class Cocktails extends Component {
                         { this.props.cocktail ?
                             <CocktailInfo />
                             :
-                            <Grid verticalAlign="middle">
+                            <Grid raised verticalAlign="middle">
                                 <GridRow centered verticalAlign="middle">
                                     <GridColumn  width={10} verticalAlign="middle">
                                         <Segment inverted color="black" verticalAlign="middle" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, position: `relative` }}>
@@ -142,7 +142,7 @@ class Cocktails extends Component {
                         <div><h3><b><u>Cocktails</u></b></h3></div>
                         <Input onChange={(e)=>this.setState({ filter: e.target.value })} placeholder="Search cocktails here..."/>
                         <div className="container" id="center-text" style={{ width: `70%`, height: `80%`, maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, borderColor: `pink`, textAlign: `center`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
-                            <Menu fluid vertical>
+                            <Menu raised fluid vertical>
                                 {this.filterCocktails().map(cocktail => {
                                     return <Menu.Item onClick={() => {
                                                 if (this.props.ingredient)

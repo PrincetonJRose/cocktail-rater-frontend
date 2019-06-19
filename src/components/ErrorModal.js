@@ -20,6 +20,7 @@ class ErrorModal extends Component {
     render() {
         return (
             <Modal
+            raised
             closeIcon
             open={this.state.modalErrorOpen}
             onClose={this.handleErrorClose}
