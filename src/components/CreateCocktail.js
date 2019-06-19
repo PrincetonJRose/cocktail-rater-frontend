@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Container, Divider, Grid, Header, Icon, Image, List, Menu, Responsive, Segment, Sidebar, Visibility, Input, Search, Comment, Form, Modal } from 'semantic-ui-react'
+import { Button, Grid, Header, Icon, Image, Form, Modal, Dropdown } from 'semantic-ui-react'
 import { createCocktail, updateCocktail, getCocktails } from '../services/APICalls'
 import ErrorModal from './ErrorModal'
 
@@ -16,15 +16,18 @@ class CreateCocktail extends Component {
                 glass: '',
                 videoUrl: '',
                 imageUrl: '',
+                ingredients: [],
+                measurements: [],
                 cocktail_ingredients: [],
             },
             modalCreateOpen: false,
             filter: '',
+            loading: false,
         }
     }
     
     componentWillReceiveProps() {
-        this.setState({ modalCreateOpen: this.props.open })
+        this.setState({ modalCreateOpen: this.props.open, results: this.props.ingredients })
     }
 
     setAlcoholic = (e, { value }) => this.setState({ cocktail: {...this.state.cocktail, alcoholic: value} })
@@ -32,76 +35,29 @@ class CreateCocktail extends Component {
     handleCreateOpen =()=> this.setState({ modalCreateOpen: true })
     handleCreateClose =()=> this.setState({ modalCreateOpen: false })
 
-    handleChange = (e) => {
-        if (["ingredient", "measurement"].includes(e.target.className) ) {
-            let cocktail_ingredients = [...this.state.cocktail.cocktail_ingredients]
-            cocktail_ingredients[e.target.dataset.id][e.target.className] = e.target.value
-            this.setState({ cocktail: {...this.state.cocktail, cocktail_ingredients: cocktail_ingredients} }, () => console.log(this.state.cocktail.cocktail_ingredients))
-        } else {
-            this.setState({ [e.target.name]: e.target.value })
-        }
-    }
     
-    addIngredient = (e) => {
-        this.setState((prevState) => ({
-                cocktail: {...this.state.cocktail, cocktail_ingredients: [...prevState.cocktail.cocktail_ingredients, {ingredient: {}, measurement: ""}]},
-        }));
-    }
-
     handleCreateCocktail =()=> {
         createCocktail(this.state.cocktail, this.props.jwt_user).then( data => {
             if (data.errors) {
                 this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                this.setState({ loading: false })
             } else {
-                console.log(data)
+                this.props.dispatch({ type: "SET_COCKTAILS", cocktailData: data })
+                this.setState({ loading: false, modalCreateOpen: false })
             }
         })
     }
-
+    
     filterIngredients =()=> {
         if (this.state.filter !== '') {
-            let search = this.props.allIngredients.filter(ingredient => {
+            let search = this.props.ingredients.filter(ingredient => {
                 if (ingredient.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (ingredient.category && ingredient.category.toLowerCase().includes(this.state.filter.toLowerCase())))
-                    return true
+                return true
             })
             return search
         } else {
-            return this.props.allIngredients
+            return this.props.ingredients
         }
-    }
-
-    ingredientList =()=> {
-        let ingredients = this.state.cocktail.cocktail_ingredients.map((val, idx)=> {
-            let iId = `ingredient-${idx}`, mId = `measurement-${idx}`
-            return (
-                <Form.Group inline key={idx}>
-                    <label htmlFor={iId}>{`Ingredient #${idx + 1}`}</label>
-                    <select
-                    type="text"
-                    name={iId}
-                    data-id={idx}
-                    id={iId}
-                    prompt="Pick Ingredient"
-                    value={this.state.cocktail.cocktail_ingredients[idx].ingredient} 
-                    className="ingredient"
-                    onChange={this.handleChange}
-                    >
-                        {this.filterIngredients().map( i => <option value={i.id}>{i.name}</option>)}
-                    </select>
-                    <label htmlFor={mId}>  How much?</label>
-                    <input
-                    type="text"
-                    name={mId}
-                    data-id={idx}
-                    id={mId}
-                    value={this.state.cocktail.cocktail_ingredients[idx].measurement} 
-                    className="measurement"
-                    onChange={this.handleChange}
-                    />
-                </Form.Group>
-            )
-        })
-        return ingredients
     }
 
     render() {
@@ -119,7 +75,7 @@ class CreateCocktail extends Component {
         }))
 
         const alcoholic = this.state.cocktail.alcoholic
-
+        
         return (
             <Modal 
                 open={this.state.modalCreateOpen}
@@ -140,11 +96,11 @@ class CreateCocktail extends Component {
                 <Image fluid size='medium' src={this.state.cocktail.imageUrl} wrapped />
                 <Modal.Description>
                     <Header>Enter Cocktail Information:</Header>
-                    <Form>
+                    <Form loading={this.state.loading}>
                         <Form.Input fluid label={`Cocktail's name`} placeholder={'Enter name here...'} onChange={(e)=>this.setState({ cocktail: {...this.state.cocktail, name: e.target.value} })} required />
                         <Form.Group widths='equal'>
                             <Form.Select label={`Category?`} options={categories} placeholder='Type of drink' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required />
-                            <Form.Select label={`Drinking glass?`} options={glasses} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required/>
+                            <Form.Select label={`Drinking glass?`} options={glasses} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, glass: data.value} }) } required/>
                         </Form.Group>
                         <Form.Group inline>
                         <label>Alcohol content?&emsp;</label>
@@ -168,26 +124,32 @@ class CreateCocktail extends Component {
                             />
                         </Form.Group>
                         <Form.Input onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, imageUrl: e.target.value } })} value={this.state.cocktail.imageUrl} label="Image:" />
-                            <label><strong>Ingredients & Measurements:</strong></label>
-                            <br></br>
-                            { this.state.cocktail.cocktail_ingredients.length > 0 ?
-                                <div>
-                                    <Form.Input placeholder="Type in criteria to find ingredients..." value={this.state.filter} label="" onChange={(e)=> this.setState({ filter: e.target.value })} />
-                                {this.ingredientList().map( ci => {
-                                    return ci
-                                })}
-                                </div>
-                                : <br></br>
-                            }
-                            { this.state.cocktail.cocktail_ingredients.length < 15 ?
-                                <div><Button icon="plus" onClick={()=>{ this.addIngredient(); this.setState({ filter: '' }) } }></Button></div>
-                                : null
-                            }
-                            <br></br>
+                        <label><strong>Ingredients & Measurements:</strong></label>
+                        <br></br>
+                        <Dropdown placeholder='Choose flavors...' fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
+                        <br></br>
+                        {
+                            this.state.cocktail.ingredients.map((i, index) => {
+                                return (
+                                    <Form.Group>
+                                        <Icon name="food" />
+                                        <Icon name="beer" />
+                                        <Form.Input label={i.name} placeholder="How much?" key={index} required onChange={(e)=> {
+                                            let newMeasurements = this.state.cocktail.measurements
+                                            newMeasurements[index] = e.target.value
+                                            this.setState({ cocktail: {...this.state.cocktail, measurements: newMeasurements} })
+                                        }} value={this.state.cocktail.measurements[index]} 
+                                        />
+                                    </Form.Group>
+                                )
+                            })
+                        }
+                        <br></br>
                         <Form.TextArea label='Instructions:' placeholder='How to mix this...' required onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, instructions: e.target.value} })}/>
                         <br></br>
                         <Form.Checkbox label='I acknowledge that this concoction is fun and amazing and ready to be shared!!!' required/>
                         <Form.Button positive onClick={()=> {
+                            this.setState({ loading: true })
                             this.handleCreateCocktail()
                             } }><Icon name="smile"/>&emsp;Bottoms up!&emsp;<Icon name="smile"/></Form.Button>
                     </Form>
@@ -209,7 +171,7 @@ let mapStateToProps =(state)=> {
     return {
         current_user: state.users.current_user,
         jwt_user: state.users.jwt_user,
-        allIngredients: state.ingredients.ingredients,
+        ingredients: state.ingredients.ingredients,
         errors: state.users.errors,
     }
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import jwt_decode from 'jwt-decode'
-import CreateCocktail from './CreateCocktail'
+import { getUser } from '../services/APICalls'
 
 class NavBar extends Component {
     render() {
@@ -33,8 +33,14 @@ class NavBar extends Component {
                     </div>
                     <div className="right menu">
                         { this.props.current_user?
-                            <Link to={`/user_profile/${jwt_decode(this.props.jwt_user).user_id}`} className="item" >
-                                <div className="content" style={{ color: `black` }}>
+                            <Link to={`/user_profile/${jwt_decode(this.props.jwt_user).user_id}`} className="item">
+                                <div className="content" style={{ color: `black` }} onClick={()=>{
+                                        if (localStorage.getItem("jwt_user")) {
+                                            getUser(jwt_decode(localStorage.getItem("jwt_user")).user_id).then( userData => {
+                                                this.props.dispatch({ type: "SET_USER", user: userData })
+                                            })
+                                        }
+                                }}>
                                     <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
                                 </div>
                             </Link>
