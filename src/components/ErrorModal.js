@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Message, Header } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
 class ErrorModal extends Component {
     constructor() {
@@ -11,7 +12,10 @@ class ErrorModal extends Component {
         this.setState({ modalErrorOpen: this.props.open })
     }
 
-    handleErrorClose =()=> this.setState({ modalErrorOpen: false })
+    handleErrorClose =()=> {
+        this.props.dispatch({ type: "SET_ERRORS", errors: [] })
+        this.setState({ modalErrorOpen: false })
+    }
 
     render() {
         return (
@@ -33,4 +37,10 @@ class ErrorModal extends Component {
     }
 }
 
-export default ErrorModal
+let mapStateToProps =(state)=> {
+    return {
+        errors: state.users.errors,
+    }
+}
+
+export default connect(mapStateToProps)(ErrorModal)

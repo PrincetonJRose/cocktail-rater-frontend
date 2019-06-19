@@ -24,4 +24,4 @@ let mapStateToProps =(state)=> {
     }
 }
 
-export default connect(mapStateToProps)(Search)
+export default connect(mapStateToProps)(SearchBar)

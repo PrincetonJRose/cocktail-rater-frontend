@@ -19,7 +19,6 @@ class Homepage extends Component {
                 img_url: '',
                 password_confirmation: '',
             },
-            errors: [],
             loading: false,
             modalOpen: false,
             modalFormOpen: false,
@@ -52,7 +51,7 @@ class Homepage extends Component {
     submitChanges =()=> {
         updateUser(this.state.user, this.props.jwt_user).then( data => {
             if (data.errors) {
-                this.setState({ errors: data.errors, modalErrorOpen: true })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
             } else {
                 this.props.dispatch({ type: "SET_USER", user: data })
                 this.handleFormClose()
@@ -106,11 +105,11 @@ class Homepage extends Component {
     render() {
         if (this.props.current_user) {
             return (
-                <Segment style={{ padding: '4em 0em' }} vertical>
+                <Segment style={{ padding: '4em 0em' }} vertical  verticalAlign='middle'>
                     <Grid container stackable verticalAlign='middle'>
-                        <Grid.Row>
-                            <Grid.Column floated='left' width={6}>
-                                <Card floated="right">
+                        <Grid.Row  verticalAlign='middle'>
+                            <Grid.Column floated='left' width={6}  verticalAlign='middle'>
+                                <Card floated="right"  verticalAlign='middle'>
                                     <Image size="medium" src={this.props.current_user.img_url} wrapped ui={false} />
                                     <Card.Content>
                                     <Card.Header textAlign="center">{this.props.current_user.username}</Card.Header>
@@ -135,6 +134,7 @@ class Homepage extends Component {
                                         <Modal 
                                             open={this.state.modalFormOpen}
                                             onClose={this.handleFormClose}
+                                            closeIcon
                                             trigger={<a onClick={()=> {
                                                 this.handleFormOpen()
                                                 let user = this.props.current_user
@@ -146,7 +146,7 @@ class Homepage extends Component {
                                             <Modal.Content image scrolling>
                                             <Image size='medium' src={this.state.user.img_url} wrapped />
                                             <Modal.Description>
-                                                <Header>Enter in new information here</Header>
+                                                <Header>Update information:</Header>
                                                 <Form fluid>
                                                     <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, username: e.target.value} })} value={this.state.user.username} label="User name:" required/>
                                                     <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, email: e.target.value} })} value={this.state.user.email} label="Email:" required/>
@@ -158,8 +158,8 @@ class Homepage extends Component {
                                             </Modal.Description>
                                             </Modal.Content>
                                             <Modal.Actions>
-                                                { this.state.errors.length > 0 ?
-                                                    <ErrorModal open={true} errors={this.state.errors} />
+                                                { this.props.errors.length > 0 ?
+                                                    <ErrorModal open={true} errors={this.props.errors} />
                                                     :
                                                     null
                                                 }
@@ -169,6 +169,7 @@ class Homepage extends Component {
                                                 open={this.state.modalOpen}
                                                 onClose={this.handleClose}
                                                 basic
+                                                closeIcon
                                                 size='small'
                                             >
                                                 <Header icon='user' content='Enter your password:' />
@@ -208,8 +209,8 @@ class Homepage extends Component {
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
-                            <Grid.Column centered width={8}>
-                                <Segment scrollable>
+                            <Grid.Column centered width={8} verticalAlign='middle'>
+                                <Segment scrollable scrolling verticalAlign='middle'>
                                     <div className="content"><h3>Concoctions you've shared:</h3></div>
                                         {
                                             this.props.current_user.cocktails.length > 0 ?
@@ -267,6 +268,7 @@ let mapStateToProps =(state)=> {
         current_user: state.users.current_user,
         api_cocktails: state.cocktails.api_cocktails,
         custom_cocktails: state.cocktails.custom_cocktails,
+        errors: state.users.errors,
     }
 }
 

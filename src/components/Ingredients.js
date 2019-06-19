@@ -87,7 +87,8 @@ class Ingredients extends Component {
                         <Menu fluid vertical>
                             {this.filterIngredients().map(ingredient => {
                                 return <Menu.Item onClick={() => {
-                                            this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
+                                            if (this.props.cocktail)
+                                                this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: null })
                                             this.getIngredientInfo(ingredient)
                                             }}><Link to={"/ingredients/" + ingredient.id}>
                                         { 

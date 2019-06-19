@@ -7,9 +7,9 @@ class HomePage extends Component {
 
     render() {
         return (
-            <Segment style={{ padding: '8em 0em' }} vertical>
+            <Segment floated="left" style={{ padding: '12em 14em' }} vertical>
                 <Grid container stackable verticalAlign='middle'>
-                    <Grid.Row>
+                    <Grid.Row >
                         <Grid.Column width={8}>
                         <Header as='h3' style={{ fontSize: '2em' }}>
                             Welcome to the Cocktail Taste & Rate!
@@ -34,10 +34,11 @@ class HomePage extends Component {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column textAlign='center'>
+                            <br></br>
                             { this.props.current_user ?
                                 null
                                 :
-                                <Link to='/login' ><Button size='huge'>Click here to get started <Icon name="chevron right" /></Button></Link>
+                                <Link to='/login' ><Button primary size='huge'>Click here to get started <Icon name="chevron right" /></Button></Link>
                             }
                         </Grid.Column>
                     </Grid.Row>

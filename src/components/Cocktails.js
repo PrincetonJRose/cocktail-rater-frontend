@@ -144,18 +144,26 @@ class Cocktails extends Component {
                         <div className="container" id="center-text" style={{ width: `70%`, height: `80%`, maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, borderColor: `pink`, textAlign: `center`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
                             <Menu fluid vertical>
                                 {this.filterCocktails().map(cocktail => {
-                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Link to={"/cocktails/api/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
+                                    return <Menu.Item onClick={() => {
+                                                if (this.props.ingredient)
+                                                    this.props.dispatch({ type: "SET_INGREDIENT", ingredientData: null })
+                                                this.getCocktailInfo(cocktail)
+                                                }}><Link to={"/cocktails/api/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
                                 })}
                             </Menu>
                         </div>
                     </div>
                     <div id="center-text" style={{ overflowX: `hidden`, overflowY: `auto`, height: `35%` }}>
                         <div><h3><b><u>Custom Drinks</u></b></h3></div>
-                        <div className="sub-content">(Cocktails users have submitted)</div>
+                        <div className="sub-content">( Cocktails users have submitted )</div>
                         <div className="container" id="center-text" style={{ width: `70%`, height: `68%`,maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, borderColor: `pink`, display: `flex`, position: `relative`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
                             <Menu fluid vertical>
                                 {this.filterCustomCocktails().map( cocktail => {
-                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Link to={"/cocktails/custom/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
+                                    return <Menu.Item onClick={() => {
+                                                if (this.props.ingredient)
+                                                    this.props.dispatch({ type: "SET_INGREDIENT", ingredientData: null })
+                                                this.getCocktailInfo(cocktail)
+                                                }}><Link to={"/cocktails/custom/" + cocktail.id}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Link></Menu.Item>
                                 })}
                             </Menu>
                         </div>
