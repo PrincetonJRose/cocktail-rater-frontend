@@ -46,13 +46,13 @@ class Login extends Component {
             return <Redirect to="/home"/>
         }
         return (
-            <Grid textAlign='center' style={{ height: '90%' }} verticalAlign='middle' >
+            <Grid raised textAlign='center' style={{ height: '90%' }} verticalAlign='middle' >
                     <Grid.Column style={{ maxWidth: 450 }}>
                         <Header as='h2' color='black' textAlign='center'>
                         Enter Account Information <i className="icon cocktail"></i>
                         </Header>
-                        <Form loading={this.state.loading} size='large' onSubmit={(e)=> {this.handleSubmit(e);this.setState({ loading: true }) }} error>
-                            <Segment stacked>
+                        <Form raised loading={this.state.loading} size='large' onSubmit={(e)=> {this.handleSubmit(e);this.setState({ loading: true }) }} error>
+                            <Segment raised stacked>
                             {this.state.errors.map( error => {
                                 return <Message error content={error}/>
                             })}

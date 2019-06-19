@@ -5,11 +5,16 @@ import { Link } from 'react-router-dom'
 import Reviews from './Reviews'
 import jwt_decode from 'jwt-decode'
 import { createReview, getUser, getIngredient, createLike, deleteLike } from '../services/APICalls'
+import ErrorModal from './ErrorModal'
 
 class CocktailInfo extends Component {
     constructor() {
         super()
-        this.state = { modalToggle: false, review: {}, }
+        this.state = {
+            modalToggle: false,
+            review: {},
+            errors: [],
+        }
     }
 
     componentDidMount() {
@@ -42,9 +47,9 @@ class CocktailInfo extends Component {
     setCocktail =(data)=> {
         if (data.errors || data.error) {
             if (data.errors) {
-                console.log(data.errors)
+                this.setState({ errors: data.errors })
             } else {
-                console.log(data.error)
+                this.setState({ errors: data.error })
             }
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
@@ -171,8 +176,8 @@ class CocktailInfo extends Component {
         }))
         
         return (
-            <Segment className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
-                <Grid  >
+            <Segment raised className="container" style={{ width: `100%`, height: `100%`, overflowY: `auto` }}>
+                <Grid raised >
                     <GridRow centered>
                         <GridColumn textAlign="centered" centered width={8}>
                             <p></p>
@@ -183,10 +188,10 @@ class CocktailInfo extends Component {
                     </GridRow>
                     <GridRow stretched centered >
                         <GridColumn width={12}>
-                        <Segment className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
+                        <Segment raised className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
                             <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}/>
-                            <Segment fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
-                                <Menu fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
+                            <Segment raised raised fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
+                                <Menu raised fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
                                     <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
                                     <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
                                     <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
@@ -210,10 +215,10 @@ class CocktailInfo extends Component {
                     </GridRow>
                     <GridRow centered>
                         <GridColumn width={12}>
-                            <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
+                            <Segment raised style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
                                 <h3 style={{ textAlign: `center` }}><b><u>What you'll need</u>:</b></h3>
                                 <div className="sub-content" style={{ textAlign: `center` }}>( Click an ingredient to see it's details )</div>
-                                <Table singleLine celled>
+                                <Table raised singleLine celled>
                                     <Table.Header>
                                         <Table.Row>
                                             <Table.HeaderCell textAlign="center">Ingredient</Table.HeaderCell>
@@ -242,7 +247,7 @@ class CocktailInfo extends Component {
                         this.props.current_user ?
                             <GridRow centered>
                                 <GridColumn width={12} >
-                                    <Segment  style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
+                                    <Segment raised style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
                                     <h3 style={{ textAlign: `center` }}><b><u>Reviews</u>:</b></h3>
                                         {
                                             <Reviews c={c}/>
@@ -262,6 +267,11 @@ class CocktailInfo extends Component {
                                                     </Form>
                                                 </Modal.Content>
                                                 <Modal.Actions>
+                                                    {
+                                                        this.state.errors.length > 0 ?
+                                                            <ErrorModal open={true} errors={this.state.errors} />
+                                                            : null
+                                                    }
                                                     <Button positive onClick={()=>{
                                                         this.toggleModal()
                                                         this.handleCreate()

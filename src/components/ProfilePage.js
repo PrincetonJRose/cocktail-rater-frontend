@@ -39,13 +39,22 @@ class Homepage extends Component {
             getApiCocktail(cocktail.id).then(data => {
                 this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
                 this.resetUserReviewLike()
+                this.props.history.push(`/cocktails/api/${data.id}`)
             })
         } else {
             getCocktail(cocktail.id).then(data => {
                 this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
                 this.resetUserReviewLike()
+                this.props.history.push(`/cocktails/custom/${data.id}`)
             })
         }
+    }
+
+    editCocktailInfo(cocktail) {
+        getCocktail(cocktail.id).then(data => {
+            this.props.dispatch({ type: "SET_EDIT_COCKTAIL", cocktailData: data })
+            this.props.history.push(`/cocktails/edit`)
+        })
     }
 
     submitChanges =()=> {
@@ -109,7 +118,7 @@ class Homepage extends Component {
                     <Grid container stackable verticalAlign='middle'>
                         <Grid.Row  verticalAlign='middle'>
                             <Grid.Column floated='left' width={6}  verticalAlign='middle'>
-                                <Card floated="right"  verticalAlign='middle'>
+                                <Card raised floated="right"  verticalAlign='middle'>
                                     <Image size="medium" src={this.props.current_user.img_url} wrapped ui={false} />
                                     <Card.Content>
                                     <Card.Header textAlign="center">{this.props.current_user.username}</Card.Header>
@@ -131,7 +140,8 @@ class Homepage extends Component {
                                     </Card.Description>
                                     </Card.Content>
                                     <Card.Content extra>
-                                        <Modal 
+                                        <Modal
+                                            raised 
                                             open={this.state.modalFormOpen}
                                             onClose={this.handleFormClose}
                                             closeIcon
@@ -164,6 +174,7 @@ class Homepage extends Component {
                                                     null
                                                 }
                                             <Modal
+                                                raised 
                                                 loading
                                                 trigger={<Button positive onClick={this.handleOpen}>Submit Changes!</Button>}
                                                 open={this.state.modalOpen}
@@ -184,15 +195,6 @@ class Homepage extends Component {
                                                             required
                                                             onChange={(e) => this.setState({ user: {...this.state.user, password: e.target.value} })}
                                                         />
-                                                        {/* < Form.Input
-                                                            fluid
-                                                            icon = 'lock'
-                                                            iconPosition = 'left'
-                                                            placeholder = 'Confirm Password...'
-                                                            type = 'password'
-                                                            required
-                                                            onChange = { (e) => this.setState({ user: {...this.state.user, password_confirmation: e.target.value} })}
-                                                        /> */}
                                                     </Form>
                                                 </Modal.Content>
                                                 <Modal.Actions>
@@ -210,13 +212,14 @@ class Homepage extends Component {
                                 </Card>
                             </Grid.Column>
                             <Grid.Column centered width={8} verticalAlign='middle'>
-                                <Segment scrollable scrolling verticalAlign='middle'>
+                                <Segment raised scrollable scrolling verticalAlign='middle'>
                                     <div className="content"><h3>Concoctions you've shared:</h3></div>
+                                    <div className="sub-content"><p>&emsp;&emsp;( Click on one to edit it )</p></div>
                                         {
                                             this.props.current_user.cocktails.length > 0 ?
                                             <Menu fluid vertical>
                                                 {this.props.current_user.cocktails.map( cocktail => {
-                                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
+                                                    return <Menu.Item onClick={() => this.editCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
                                                 })}
                                             </Menu>
                                             :
@@ -226,7 +229,7 @@ class Homepage extends Component {
                                     <div className="content"><h3>Favorites:</h3></div>
                                         {
                                             this.props.current_user.likes.length > 0 ?
-                                            <Menu fluid vertical>
+                                            <Menu raised fluid vertical>
                                                 {this.getFavorites().map( cocktail => {
                                                     return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
                                                 })}

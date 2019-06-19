@@ -91,10 +91,10 @@ class Reviews extends Component {
         let c = this.props.c
         
         return (
-            <Comment.Group>
+            <Comment.Group raised >
                 {c.reviews.map( review => {
                     return (
-                        <Comment>
+                        <Comment raised >
                             <Comment.Avatar circular src={review.user_avatar_image} />
                             <Comment.Content>
                             <Comment.Author as='a'>{review.user_name}</Comment.Author>
@@ -141,6 +141,7 @@ class Reviews extends Component {
                             </Comment.Actions>
 
                             <Modal
+                                raised
                                 dimmer="blurring"
                                 size="large"
                                 closeIcon
@@ -149,7 +150,7 @@ class Reviews extends Component {
                             >
                                 <Modal.Header>Your review:</Modal.Header>
                                 <Modal.Content scrolling>
-                                    <Form size="large" loading={this.state.loading}>
+                                    <Form raised size="large" loading={this.state.loading}>
                                         <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} value={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required />
                                         <br></br>
                                         <div><p></p></div>
@@ -162,7 +163,7 @@ class Reviews extends Component {
                                         :
                                         null
                                     }
-                                    <Button positive onClick={()=>{
+                                    <Button raised positive onClick={()=>{
                                         this.handleUpdate()
                                         this.setState({ loading: true })
                                     }}>Submit Changes!</Button>
@@ -170,6 +171,7 @@ class Reviews extends Component {
                                 </Modal>
 
                             <Modal
+                                raised
                                 dimmer="blurring"
                                 size="large"
                                 closeIcon
@@ -183,7 +185,7 @@ class Reviews extends Component {
                                         <p>{this.state.commentOnReview.content}</p>
                                     </Modal.Description>
                                     <div><p><br></br></p></div>
-                                    <Form size="large" loading={this.state.loading}>
+                                    <Form raised size="large" loading={this.state.loading}>
                                         <div><p></p></div>
                                         <Form.TextArea label={<h3><b><u>Make a comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
                                     </Form>
@@ -194,7 +196,7 @@ class Reviews extends Component {
                                         :
                                         null
                                     }
-                                    <Button positive onClick={()=>{
+                                    <Button raised positive onClick={()=>{
                                         this.handleCommentCreate()
                                         this.setState({ loading: true })
                                     }}>Submit!</Button>
@@ -202,6 +204,7 @@ class Reviews extends Component {
                             </Modal>
 
                             <Modal
+                                raised
                                 dimmer="blurring"
                                 size="large"
                                 closeIcon
@@ -215,7 +218,7 @@ class Reviews extends Component {
                                         <p>{this.state.commentOnReview.content}</p>
                                     </Modal.Description>
                                     <div><p><br></br></p></div>
-                                    <Form size="large" loading={this.state.loading}>
+                                    <Form raised size="large" loading={this.state.loading}>
                                         <div><p></p></div>
                                         <Form.TextArea label={<h3><b><u>New comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
                                     </Form>
@@ -236,10 +239,10 @@ class Reviews extends Component {
                             </Comment.Content>
                             {
                                 this.state.showComments.includes(review) ?
-                                    <Comment.Group>
+                                    <Comment.Group raised >
                                         { review.comments.map( comment => {
                                             return (
-                                                <Comment>
+                                                <Comment raised >
                                                     <Comment.Avatar src={comment.user_avatar_image} />
                                                     <Comment.Content>
                                                         <Comment.Author as='a'>{comment.user_name}</Comment.Author>

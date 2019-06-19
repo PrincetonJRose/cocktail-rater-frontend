@@ -39,6 +39,7 @@ class App extends Component {
         <NavBar />
         <Switch>
           <Route exact path="/cocktails/new" component={CreateCocktail} />
+          <Route exact path="/cocktails/edit" component={CreateCocktail} />
           <Route exact path="/cocktails/*" component={Cocktails} />
           <Route exact path="/cocktails" component={Cocktails} />
           {/* <Route exact path="/cocktails/" render={()=>(
