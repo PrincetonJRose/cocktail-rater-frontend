@@ -44,8 +44,7 @@ class NavBar extends Component {
                                         <Image src={this.props.current_user.img_url} avatar/>{'  '}{this.props.current_user.username}
                                     </div>
                                 </Link>
-                            :
-                            null
+                            : null
                         }
                         <Link to="/search/" className="item" style={{ color: `black` }} >
                             <div className="content">Search <i className="icon search"></i></div>
@@ -63,12 +62,11 @@ class NavBar extends Component {
                                             }} >
                                         <div className="content">Logout</div>
                                 </Link> 
-                                :
+                            :
                                 <Link to="/login" className="item" style={{ color: 'black' }} >
                                     <div className="content">Login</div>
                                 </Link>
                         }
-
                     </div>
                 </div>
             </div>

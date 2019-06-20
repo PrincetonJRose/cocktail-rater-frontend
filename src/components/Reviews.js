@@ -92,194 +92,197 @@ class Reviews extends Component {
         
         return (
             <Comment.Group raised >
-                {c.reviews.map( review => {
-                    return (
-                        <Comment raised >
-                            <Comment.Avatar circular src={review.user_avatar_image} />
-                            <Comment.Content>
-                            <Comment.Author as='a'>{review.user_name}</Comment.Author>
-                            <Comment.Metadata>
-                                <div>Rating: {review.rating}</div>
-                            </Comment.Metadata>
-                            <Comment.Text>{review.content}</Comment.Text>
-                            <Comment.Actions>
+                {
+                    c.reviews.map( review => {
+                        return (
+                            <Comment raised >
+                                <Comment.Avatar circular src={review.user_avatar_image} />
+                                <Comment.Content>
+                                    <Comment.Author as='a'>{review.user_name}</Comment.Author>
+                                    <Comment.Metadata>
+                                        <div>Rating: {review.rating}</div>
+                                    </Comment.Metadata>
+                                    <Comment.Text>{review.content}</Comment.Text>
+                                    <Comment.Actions>
+                                        {
+                                            this.state.showComments.includes(review) ?
+                                                <Comment.Action onClick={()=>{
+                                                    let hide = this.state.showComments.filter( r => {
+                                                        if (r.id !== review.id)
+                                                            return true
+                                                    })
+                                                    this.setState({ showComments: hide })
+                                                }}>Hide replies</Comment.Action>
+                                            :
+                                                <Comment.Action onClick={()=>{
+                                                    let show = this.state.showComments
+                                                    show.push(review)
+                                                    this.setState({ showComments: show })
+                                                }} >Show replies</Comment.Action>
+                                        }
+                                        <Comment.Action onClick={()=>{
+                                            this.setState({ commentOnReview: review})
+                                            this.handleNewCommentOpen()
+                                        }}>Reply</Comment.Action>
+                                        {
+                                            this.props.userReview && review.id === this.props.userReview.id ?
+                                                <Comment.Action textAlign="right" onClick={()=> {
+                                                    this.setState({ review: this.props.userReview })
+                                                    this.handleReviewEditOpen()
+                                                }}>Edit</Comment.Action>
+                                            : null
+                                        }
+                                        {
+                                            this.props.userReview && review.id === this.props.userReview.id ?
+                                                <Comment.Action textAlign="right" onClick={()=> {
+                                                    this.handleDelete()
+                                                }}>Delete</Comment.Action>
+                                            : null
+                                        }
+                                    </Comment.Actions>
+
+                                    <Modal
+                                        raised
+                                        dimmer="blurring"
+                                        size="large"
+                                        closeIcon
+                                        onClose={this.handleReviewEditClose}
+                                        open={this.state.modalReviewEditToggle}
+                                    >
+                                        <Modal.Header>Your review:</Modal.Header>
+                                        <Modal.Content scrolling>
+                                            <Form raised size="large" loading={this.state.loading}>
+                                                <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} value={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required />
+                                                <br></br>
+                                                <div><p></p></div>
+                                                <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" value={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required />
+                                            </Form>
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            {
+                                                this.props.errors.length > 0 ?
+                                                    <ErrorModal open={true} errors={this.props.errors} />
+                                                : null
+                                            }
+                                            <Button raised positive onClick={()=>{
+                                                this.handleUpdate()
+                                                this.setState({ loading: true })
+                                            }}>Submit Changes!</Button>
+                                        </Modal.Actions>
+                                    </Modal>
+
+                                    <Modal
+                                        raised
+                                        dimmer="blurring"
+                                        size="large"
+                                        closeIcon
+                                        onClose={this.handleNewCommentClose}
+                                        open={this.state.modalCommentCreateToggle}
+                                    >
+                                        <Modal.Header>Share your thoughts</Modal.Header>
+                                        <Modal.Content scrolling>
+                                            <Modal.Description>
+                                                <Image avatar src={this.state.commentOnReview.user_avatar_image} /> {this.state.commentOnReview.user_name}
+                                                <p>{this.state.commentOnReview.content}</p>
+                                            </Modal.Description>
+                                            <div><p><br></br></p></div>
+                                            <Form raised size="large" loading={this.state.loading}>
+                                                <div><p></p></div>
+                                                <Form.TextArea label={<h3><b><u>Make a comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
+                                            </Form>
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            {
+                                                this.props.errors.length > 0 ?
+                                                    <ErrorModal open={true} errors={this.props.errors} />
+                                                : null
+                                            }
+                                            <Button raised positive onClick={()=>{
+                                                this.handleCommentCreate()
+                                                this.setState({ loading: true })
+                                            }}>Submit!</Button>
+                                        </Modal.Actions>
+                                    </Modal>
+
+                                    <Modal
+                                        raised
+                                        dimmer="blurring"
+                                        size="large"
+                                        closeIcon
+                                        onClose={this.handleEditCommentClose}
+                                        open={this.state.modalCommentEditToggle}
+                                    >
+                                        <Modal.Header>Edit your comment</Modal.Header>
+                                        <Modal.Content scrolling>
+                                            <Modal.Description>
+                                                <Image avatar src={this.state.commentOnReview.user_avatar_image} /> {this.state.commentOnReview.user_name}
+                                                <p>{this.state.commentOnReview.content}</p>
+                                            </Modal.Description>
+                                            <div><p><br></br></p></div>
+                                            <Form raised size="large" loading={this.state.loading}>
+                                                <div><p></p></div>
+                                                <Form.TextArea label={<h3><b><u>New comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
+                                            </Form>
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            {
+                                                this.props.errors.length > 0 ?
+                                                    <ErrorModal open={true} errors={this.props.errors} />
+                                                : null
+                                            }
+                                            <Button positive onClick={()=>{
+                                                this.handleCommentEdit()
+                                                this.setState({ loading: true })
+                                            }}>Submit Changes!</Button>
+                                        </Modal.Actions>
+                                    </Modal>
+                                </Comment.Content>
                                 {
                                     this.state.showComments.includes(review) ?
-                                        <Comment.Action onClick={()=>{
-                                            let hide = this.state.showComments.filter( r => {
-                                                if (r.id !== review.id)
-                                                    return true
-                                            })
-                                            this.setState({ showComments: hide })
-                                        }}>Hide replies</Comment.Action>
-                                    :
-                                        <Comment.Action onClick={()=>{
-                                            let show = this.state.showComments
-                                            show.push(review)
-                                            this.setState({ showComments: show })
-                                        }} >Show replies</Comment.Action>
-                                }
-                                <Comment.Action onClick={()=>{
-                                    this.setState({ commentOnReview: review})
-                                    this.handleNewCommentOpen()
-                                }}>Reply</Comment.Action>
-                                {
-                                    this.props.userReview && review.id === this.props.userReview.id ?
-                                    <Comment.Action textAlign="right" onClick={()=> {
-                                        this.setState({ review: this.props.userReview })
-                                        this.handleReviewEditOpen()
-                                    }}>Edit</Comment.Action>
+                                        <Comment.Group raised >
+                                            {
+                                                review.comments.map( comment => {
+                                                    return (
+                                                        <Comment raised >
+                                                            <Comment.Avatar src={comment.user_avatar_image} />
+                                                            <Comment.Content>
+                                                                <Comment.Author as='a'>{comment.user_name}</Comment.Author>
+                                                                <Comment.Metadata>
+                                                                    <div></div>
+                                                                </Comment.Metadata>
+                                                                <Comment.Text>{comment.content}</Comment.Text>
+                                                                <Comment.Actions>
+                                                                    {
+                                                                        comment.user_id === jwt_decode(this.props.jwt_user).user_id ?
+                                                                        <Comment.Action textAlign="right" onClick={()=> {
+                                                                            this.setState({ comment: comment, commentOnReview: review })
+                                                                            this.handleEditCommentOpen()
+                                                                            }}>Edit</Comment.Action>
+                                                                        : null
+                                                                    }
+                                                                    {
+                                                                        comment.user_id === jwt_decode(this.props.jwt_user).user_id ?
+                                                                        <Comment.Action textAlign="right" onClick={()=> {
+                                                                            this.handleCommentDelete(comment)
+                                                                            }}>Delete</Comment.Action>
+                                                                        : null
+                                                                    }
+                                                                    <Comment.Action>
+                                                                        
+                                                                    </Comment.Action>
+                                                                </Comment.Actions>
+                                                            </Comment.Content>
+                                                        </Comment>
+                                                    )
+                                                })
+                                            }
+                                        </Comment.Group>
                                     : null
                                 }
-                                {
-                                    this.props.userReview && review.id === this.props.userReview.id ?
-                                    <Comment.Action textAlign="right" onClick={()=> {
-                                        this.handleDelete()
-                                    }}>Delete</Comment.Action>
-                                    : null
-                                }
-                            </Comment.Actions>
-
-                            <Modal
-                                raised
-                                dimmer="blurring"
-                                size="large"
-                                closeIcon
-                                onClose={this.handleReviewEditClose}
-                                open={this.state.modalReviewEditToggle}
-                            >
-                                <Modal.Header>Your review:</Modal.Header>
-                                <Modal.Content scrolling>
-                                    <Form raised size="large" loading={this.state.loading}>
-                                        <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} value={this.state.review.rating} options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required />
-                                        <br></br>
-                                        <div><p></p></div>
-                                        <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" value={this.state.review.content} onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required />
-                                    </Form>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    { this.props.errors.length > 0 ?
-                                        <ErrorModal open={true} errors={this.props.errors} />
-                                        :
-                                        null
-                                    }
-                                    <Button raised positive onClick={()=>{
-                                        this.handleUpdate()
-                                        this.setState({ loading: true })
-                                    }}>Submit Changes!</Button>
-                                </Modal.Actions>
-                                </Modal>
-
-                            <Modal
-                                raised
-                                dimmer="blurring"
-                                size="large"
-                                closeIcon
-                                onClose={this.handleNewCommentClose}
-                                open={this.state.modalCommentCreateToggle}
-                            >
-                                <Modal.Header>Share your thoughts</Modal.Header>
-                                <Modal.Content scrolling>
-                                    <Modal.Description>
-                                        <Image avatar src={this.state.commentOnReview.user_avatar_image} /> {this.state.commentOnReview.user_name}
-                                        <p>{this.state.commentOnReview.content}</p>
-                                    </Modal.Description>
-                                    <div><p><br></br></p></div>
-                                    <Form raised size="large" loading={this.state.loading}>
-                                        <div><p></p></div>
-                                        <Form.TextArea label={<h3><b><u>Make a comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
-                                    </Form>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    { this.props.errors.length > 0 ?
-                                        <ErrorModal open={true} errors={this.props.errors} />
-                                        :
-                                        null
-                                    }
-                                    <Button raised positive onClick={()=>{
-                                        this.handleCommentCreate()
-                                        this.setState({ loading: true })
-                                    }}>Submit!</Button>
-                                </Modal.Actions>
-                            </Modal>
-
-                            <Modal
-                                raised
-                                dimmer="blurring"
-                                size="large"
-                                closeIcon
-                                onClose={this.handleEditCommentClose}
-                                open={this.state.modalCommentEditToggle}
-                            >
-                                <Modal.Header>Edit your comment</Modal.Header>
-                                <Modal.Content scrolling>
-                                    <Modal.Description>
-                                        <Image avatar src={this.state.commentOnReview.user_avatar_image} /> {this.state.commentOnReview.user_name}
-                                        <p>{this.state.commentOnReview.content}</p>
-                                    </Modal.Description>
-                                    <div><p><br></br></p></div>
-                                    <Form raised size="large" loading={this.state.loading}>
-                                        <div><p></p></div>
-                                        <Form.TextArea label={<h3><b><u>New comment</u>:</b></h3>} type="text" fluid transparent name="Content:" value={this.state.comment.content} onChange={(e)=> this.setState({ comment: {...this.state.comment, content: e.target.value} })} required />
-                                    </Form>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    { this.props.errors.length > 0 ?
-                                        <ErrorModal open={true} errors={this.props.errors} />
-                                        :
-                                        null
-                                    }
-                                    <Button positive onClick={()=>{
-                                        this.handleCommentEdit()
-                                        this.setState({ loading: true })
-                                    }}>Submit Changes!</Button>
-                                </Modal.Actions>
-                            </Modal>
-
-                            </Comment.Content>
-                            {
-                                this.state.showComments.includes(review) ?
-                                    <Comment.Group raised >
-                                        { review.comments.map( comment => {
-                                            return (
-                                                <Comment raised >
-                                                    <Comment.Avatar src={comment.user_avatar_image} />
-                                                    <Comment.Content>
-                                                        <Comment.Author as='a'>{comment.user_name}</Comment.Author>
-                                                        <Comment.Metadata>
-                                                        <div></div>
-                                                        </Comment.Metadata>
-                                                        <Comment.Text>{comment.content}</Comment.Text>
-                                                        <Comment.Actions>
-                                                            {
-                                                                comment.user_id === jwt_decode(this.props.jwt_user).user_id ?
-                                                                <Comment.Action textAlign="right" onClick={()=> {
-                                                                    this.setState({ comment: comment, commentOnReview: review })
-                                                                    this.handleEditCommentOpen()
-                                                                    }}>Edit</Comment.Action>
-                                                                : null
-                                                            }
-                                                            {
-                                                                comment.user_id === jwt_decode(this.props.jwt_user).user_id ?
-                                                                <Comment.Action textAlign="right" onClick={()=> {
-                                                                    this.handleCommentDelete(comment)
-                                                                    }}>Delete</Comment.Action>
-                                                                : null
-                                                            }
-                                                            <Comment.Action>
-                                                                
-                                                            </Comment.Action>
-                                                        </Comment.Actions>
-                                                    </Comment.Content>
-                                                </Comment>
-                                            )
-                                        })}
-                                    </Comment.Group>
-                                : null
-                            }
-                        </Comment>
-                    )
-                })}
+                            </Comment>
+                        )
+                    })
+                }
             </Comment.Group>
         )
     }

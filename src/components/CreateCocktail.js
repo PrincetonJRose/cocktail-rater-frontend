@@ -41,6 +41,8 @@ class CreateCocktail extends Component {
         }
         this.setState({
             modalCreateOpen: false,
+            filter: '',
+            loading: false,
             cocktail: {
                 name: '',
                 alcoholic: '',
@@ -135,7 +137,7 @@ class CreateCocktail extends Component {
                                             }}
                                     >
                                     <Icon name='cocktail' />Click here for a remix!!!</Button>
-                                    :
+                                :
                                     <Button size="huge" verticalAlign="middle"  
                                         onClick={()=> {
                                             this.handleCreateOpen()
@@ -149,69 +151,69 @@ class CreateCocktail extends Component {
             >
                 {/* <Modal.Header>Add a new cocktail!</Modal.Header> */}
                 <Modal.Content image scrolling>
-                <Image raised fluid size='medium' src={this.state.cocktail.imageUrl} wrapped />
-                <Modal.Description>
-                    <Header raised >Enter Cocktail Information:</Header>
-                    <Form raised loading={this.state.loading}>
-                        <Form.Input  raised fluid label={`Cocktail's name`} placeholder={'Enter name here...'} onChange={(e)=>this.setState({ cocktail: {...this.state.cocktail, name: e.target.value} })} value={this.state.cocktail.name} required />
-                        <Form.Group  raised widths='equal'>
-                            <Form.Select label={`Category?`} options={categories} value={this.state.cocktail.category} placeholder='Type of drink' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required />
-                            <Form.Select label={`Drinking glass?`} options={glasses} value={this.state.cocktail.glass} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, glass: data.value} }) } required/>
-                        </Form.Group>
-                        <Form.Group inline>
-                        <label>Alcohol content?&emsp;</label>
-                            <Form.Radio
-                                raised 
-                                label='Alcoholic'
-                                value='Alcoholic'
-                                checked={alcoholic === 'Alcoholic'}
-                                onChange={this.setAlcoholic}
-                            />
-                            <Form.Radio
-                                raised 
-                                label='Non Alcoholic'
-                                value='Non Alcoholic'
-                                checked={alcoholic === 'Non Alcoholic'}
-                                onChange={this.setAlcoholic}
-                            />
-                            <Form.Radio
-                                raised 
-                                label='Optional'
-                                value='Optional'
-                                checked={alcoholic === 'Optional'}
-                                onChange={this.setAlcoholic}
-                            />
-                        </Form.Group>
-                        <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, imageUrl: e.target.value } })} value={this.state.cocktail.imageUrl} label="Image:" />
-                        <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, videoURL: e.target.value } })} value={this.state.cocktail.videoURL} label="Instructional video (optional)" />
-                        <label><strong>Ingredients & Measurements:</strong></label>
-                        <br></br>
-                        <Dropdown placeholder='Choose flavors...' raised fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
-                        <br></br>
-                        {
-                            this.state.cocktail.ingredients.map((i, index) => {
-                                return (
-                                    <Form.Group>
-                                        <Icon name="food" />
-                                        <Icon name="beer" />
-                                        <Form.Input label={i.name} placeholder="How much?" key={index} required onChange={(e)=> {
-                                            let newMeasurements = this.state.cocktail.measurements
-                                            newMeasurements[index] = e.target.value
-                                            this.setState({ cocktail: {...this.state.cocktail, measurements: newMeasurements} })
-                                        }} value={this.state.cocktail.measurements[index]} 
-                                        />
-                                    </Form.Group>
-                                )
-                            })
-                        }
-                        <br></br>
-                        <Form.TextArea raised label='Instructions:' value={this.state.cocktail.instructions} placeholder='How to mix this...' required onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, instructions: e.target.value} })}/>
-                        <br></br>
-                        <Form.Checkbox raised label='I acknowledge that this concoction is fun and amazing and ready to be shared!!!' required/>
-                        <br></br>
-                        <br></br>
-                    </Form>
-                </Modal.Description>
+                    <Image raised fluid size='medium' src={this.state.cocktail.imageUrl} wrapped />
+                    <Modal.Description>
+                        <Header raised >Enter Cocktail Information:</Header>
+                        <Form raised loading={this.state.loading}>
+                            <Form.Input  raised fluid label={`Cocktail's name`} placeholder={'Enter name here...'} onChange={(e)=>this.setState({ cocktail: {...this.state.cocktail, name: e.target.value} })} value={this.state.cocktail.name} required />
+                            <Form.Group  raised widths='equal'>
+                                <Form.Select label={`Category?`} options={categories} value={this.state.cocktail.category} placeholder='Type of drink' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, category: data.value} }) } required />
+                                <Form.Select label={`Drinking glass?`} options={glasses} value={this.state.cocktail.glass} placeholder='Type of glass' onChange={(e, data)=> this.setState({ cocktail: {...this.state.cocktail, glass: data.value} }) } required/>
+                            </Form.Group>
+                            <Form.Group inline>
+                                <label>Alcohol content?&emsp;</label>
+                                <Form.Radio
+                                    raised 
+                                    label='Alcoholic'
+                                    value='Alcoholic'
+                                    checked={alcoholic === 'Alcoholic'}
+                                    onChange={this.setAlcoholic}
+                                />
+                                <Form.Radio
+                                    raised 
+                                    label='Non Alcoholic'
+                                    value='Non Alcoholic'
+                                    checked={alcoholic === 'Non Alcoholic'}
+                                    onChange={this.setAlcoholic}
+                                />
+                                <Form.Radio
+                                    raised 
+                                    label='Optional'
+                                    value='Optional'
+                                    checked={alcoholic === 'Optional'}
+                                    onChange={this.setAlcoholic}
+                                />
+                            </Form.Group>
+                            <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, imageUrl: e.target.value } })} value={this.state.cocktail.imageUrl} label="Image:" />
+                            <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, videoURL: e.target.value } })} value={this.state.cocktail.videoURL} label="Instructional video (optional)" />
+                            <label><strong>Ingredients & Measurements:</strong></label>
+                            <br></br>
+                            <Dropdown placeholder='Choose flavors...' raised fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
+                            <br></br>
+                            {
+                                this.state.cocktail.ingredients.map((i, index) => {
+                                    return (
+                                        <Form.Group>
+                                            <Icon name="food" />
+                                            <Icon name="beer" />
+                                            <Form.Input label={i.name} placeholder="How much?" key={index} required onChange={(e)=> {
+                                                let newMeasurements = this.state.cocktail.measurements
+                                                newMeasurements[index] = e.target.value
+                                                this.setState({ cocktail: {...this.state.cocktail, measurements: newMeasurements} })
+                                            }} value={this.state.cocktail.measurements[index]} 
+                                            />
+                                        </Form.Group>
+                                    )
+                                })
+                            }
+                            <br></br>
+                            <Form.TextArea raised label='Instructions:' value={this.state.cocktail.instructions} placeholder='How to mix this...' required onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, instructions: e.target.value} })}/>
+                            <br></br>
+                            <Form.Checkbox raised label='I acknowledge that this concoction is fun and amazing and ready to be shared!!!' required/>
+                            <br></br>
+                            <br></br>
+                        </Form>
+                    </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
                     {
@@ -226,10 +228,10 @@ class CreateCocktail extends Component {
                                 this.handleCreateCocktail()
                             } }><Icon name="smile"/>&emsp;Bottoms up!&emsp;<Icon name="smile"/></Button>
                     }
-                    { this.props.errors.length > 0 ?
-                        <ErrorModal open={true} errors={this.props.errors}/>
-                        :
-                        null
+                    {
+                        this.props.errors.length > 0 ?
+                            <ErrorModal open={true} errors={this.props.errors}/>
+                        : null
                     }
                 </Modal.Actions>
             </Modal>

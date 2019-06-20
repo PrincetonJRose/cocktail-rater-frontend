@@ -116,23 +116,25 @@ class Cocktails extends Component {
         return (
             <div className="container" id="full-fit">
                 <div className="container" style={{ width: `65%`, height: `100%`, overflowY: `auto`, overflowX: `hidden`, float: `right` }}>
-                { this.props.ingredient ?
-                    <IngredientInfo />
+                {
+                    this.props.ingredient ?
+                        <IngredientInfo />
                     :
-                    <div className="container">
-                        { this.props.cocktail ?
-                            <CocktailInfo />
-                            :
-                            <Grid raised verticalAlign="middle">
-                                <GridRow centered verticalAlign="middle">
-                                    <GridColumn  width={10} verticalAlign="middle">
-                                        <Segment inverted color="black" verticalAlign="middle" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, position: `relative` }}>
-                                        ( Click one of the cocktails in the list to see it's details! )
-                                        </Segment>
-                                    </GridColumn>
-                                </GridRow>
-                            </Grid>
-                        }
+                        <div className="container">
+                            {
+                                this.props.cocktail ?
+                                    <CocktailInfo />
+                                :
+                                    <Grid raised verticalAlign="middle">
+                                        <GridRow centered verticalAlign="middle">
+                                            <GridColumn  width={10} verticalAlign="middle">
+                                                <Segment inverted color="black" verticalAlign="middle" style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, position: `relative` }}>
+                                                ( Click one of the cocktails in the list to see it's details! )
+                                                </Segment>
+                                            </GridColumn>
+                                        </GridRow>
+                                    </Grid>
+                            }
                         </div>
                     }
                 </div>

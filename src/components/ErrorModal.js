@@ -28,7 +28,7 @@ class ErrorModal extends Component {
                 <Header icon='exclamation triangle' content='There were some errors:' />
                 <Modal.Content>
                     {this.props.errors.map( error => {
-                        return <Message error>{error}</Message>
+                        return <Message error content={error} />
                     })}
                 </Modal.Content>
                 <Modal.Actions>
