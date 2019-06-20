@@ -38,24 +38,24 @@ class CreateCocktail extends Component {
     handleCreateClose =()=> {
         if (this.props.editCocktail) {
             this.props.dispatch({ type: "SET_EDIT_COCKTAIL", cocktailData: null })
+            this.setState({
+                modalCreateOpen: false,
+                filter: '',
+                loading: false,
+                cocktail: {
+                    name: '',
+                    alcoholic: '',
+                    category: '',
+                    instructions: '',
+                    glass: '',
+                    videoURL: '',
+                    imageUrl: '',
+                    ingredients: [],
+                    measurements: [],
+                    cocktail_ingredients: [],
+                },
+            })
         }
-        this.setState({
-            modalCreateOpen: false,
-            filter: '',
-            loading: false,
-            cocktail: {
-                name: '',
-                alcoholic: '',
-                category: '',
-                instructions: '',
-                glass: '',
-                videoURL: '',
-                imageUrl: '',
-                ingredients: [],
-                measurements: [],
-                cocktail_ingredients: [],
-            },
-        })
     }
 
     handleEditCocktail =()=> {
@@ -188,7 +188,19 @@ class CreateCocktail extends Component {
                             <Form.Input raised onChange={(e)=> this.setState({ cocktail: {...this.state.cocktail, videoURL: e.target.value } })} value={this.state.cocktail.videoURL} label="Instructional video (optional)" />
                             <label><strong>Ingredients & Measurements:</strong></label>
                             <br></br>
-                            <Dropdown placeholder='Choose flavors...' raised fluid search={()=>this.filterIngredients()} onSearchChange={(e)=>this.setState({ filter: e.target.value })} multiple selection value={this.state.cocktail.ingredients} options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) } onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} } required />
+                            <Dropdown 
+                                placeholder='Choose flavors...'
+                                raised 
+                                fluid 
+                                search // to allow filtered search... still not working 100%    search={()=>this.filterIngredients()}
+                                onSearchChange={(e)=>this.setState({ filter: e.target.value }) }
+                                multiple
+                                selection
+                                value={this.state.cocktail.ingredients}
+                                options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) }
+                                onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} }
+                                required
+                            />
                             <br></br>
                             {
                                 this.state.cocktail.ingredients.map((i, index) => {

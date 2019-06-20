@@ -40,7 +40,7 @@ class Reviews extends Component {
     handleUpdate =()=> {
         updateReview(this.state.review, this.props.jwt_user).then(data => {
             this.setCocktail(data)
-            this.setState({ loading: false })
+            this.setState({ loading: false, })
             this.handleReviewEditClose()
         })
     }
@@ -64,7 +64,13 @@ class Reviews extends Component {
     handleCommentEdit =()=> {
         updateComment(this.state.comment, this.props.jwt_user).then(data => {
             this.setCocktail(data)
-            this.setState({ loading: false })
+            this.setState({
+                loading: false,
+                comment: {
+                    content: '',
+                    review_id: null,
+                },
+            })
             this.handleEditCommentClose()
         })
     }
