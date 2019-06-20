@@ -89,6 +89,7 @@ class IngredientInfo extends Component {
                             </Segment>
                         </GridColumn>
                     </GridRow>
+
                     <GridRow stretched centered >
                         <GridColumn width={12}>
                         <Segment raised className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
@@ -101,6 +102,7 @@ class IngredientInfo extends Component {
                         </Segment>
                         </GridColumn>
                     </GridRow>
+                    
                     <GridRow centered>
                         <GridColumn width={12}>
                             <Segment raised style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink` }}>
@@ -114,18 +116,19 @@ class IngredientInfo extends Component {
                                         </Table.Row>
                                     </Table.Header>
                                     <Table.Body>
-                                            { this.props.cocktailList && this.props.measurements ?
-                                                this.props.cocktailList.map( cocktail => {
-                                                    index++
-                                                    return (
-                                                        <Table.Row onClick={()=> {
-                                                            this.getCocktailInfo(cocktail)
-                                                            }}>
-                                                            <Table.Cell>{cocktail.name}</Table.Cell>
-                                                            <Table.Cell>{this.props.measurements[index]}</Table.Cell>
-                                                        </Table.Row>
-                                                    )
-                                                })
+                                            {
+                                                this.props.cocktailList && this.props.measurements ?
+                                                    this.props.cocktailList.map( cocktail => {
+                                                        index++
+                                                        return (
+                                                            <Table.Row onClick={()=> {
+                                                                this.getCocktailInfo(cocktail)
+                                                                }}>
+                                                                <Table.Cell>{cocktail.name}</Table.Cell>
+                                                                <Table.Cell>{this.props.measurements[index]}</Table.Cell>
+                                                            </Table.Row>
+                                                        )
+                                                    })
                                                 : null
                                             }
                                     </Table.Body>

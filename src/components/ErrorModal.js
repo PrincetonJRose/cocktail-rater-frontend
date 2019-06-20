@@ -20,15 +20,15 @@ class ErrorModal extends Component {
     render() {
         return (
             <Modal
-            raised
-            closeIcon
-            open={this.state.modalErrorOpen}
-            onClose={this.handleErrorClose}
+                raised
+                closeIcon
+                open={this.state.modalErrorOpen}
+                onClose={this.handleErrorClose}
             >
                 <Header icon='exclamation triangle' content='There were some errors:' />
                 <Modal.Content>
                     {this.props.errors.map( error => {
-                        return <Message error>{error}</Message>
+                        return <Message error content={error} />
                     })}
                 </Modal.Content>
                 <Modal.Actions>

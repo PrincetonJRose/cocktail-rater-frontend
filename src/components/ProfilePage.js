@@ -128,12 +128,12 @@ class Homepage extends Component {
                                     <Card.Meta>
                                         Email: {this.props.current_user.email}
                                     </Card.Meta>
-                                    { (this.props.current_user.first_name && this.props.current_user.last_name) || this.props.current_user.first_name ?
-                                    <Card.Description>
-                                        Name: {this.props.current_user.first_name} {this.props.current_user.last_name ? <span>{' ' + this.props.current_user.last_name}</span> : null }
-                                    </Card.Description>
-                                    :
-                                    null
+                                    {
+                                        (this.props.current_user.first_name && this.props.current_user.last_name) || this.props.current_user.first_name ?
+                                            <Card.Description>
+                                                Name: {this.props.current_user.first_name} {this.props.current_user.last_name ? <span>{' ' + this.props.current_user.last_name}</span> : null }
+                                            </Card.Description>
+                                        : null
                                     }
                                     <Card.Description>
                                         {this.props.current_user.bio}
@@ -154,58 +154,59 @@ class Homepage extends Component {
                                             <Icon name='user' />Edit Profile</a>}>
                                             <Modal.Header>Your Profile</Modal.Header>
                                             <Modal.Content image scrolling>
-                                            <Image size='medium' src={this.state.user.img_url} wrapped />
-                                            <Modal.Description>
-                                                <Header>Update information:</Header>
-                                                <Form fluid>
-                                                    <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, username: e.target.value} })} value={this.state.user.username} label="User name:" required/>
-                                                    <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, email: e.target.value} })} value={this.state.user.email} label="Email:" required/>
-                                                    <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, img_url: e.target.value } })} value={this.state.user.img_url} label="Image:" required/>
-                                                    <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, first_name: e.target.value} })} value={this.state.user.first_name} label="First name:" />
-                                                    <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, last_name: e.target.value} })} value={this.state.user.last_name} label="Last name:" />
-                                                    <Form.TextArea onChange={(e)=> this.setState({ user: {...this.state.user, bio: e.target.value} })} value={this.state.user.bio} label="What would you like for others to know about you?" />
-                                                </Form>
-                                            </Modal.Description>
+                                                <Image size='medium' src={this.state.user.img_url} wrapped />
+                                                <Modal.Description>
+                                                    <Header>Update information:</Header>
+                                                    <Form fluid>
+                                                        <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, username: e.target.value} })} value={this.state.user.username} label="User name:" required/>
+                                                        <Form.Input fluid onChange={(e)=> this.setState({ user: {...this.state.user, email: e.target.value} })} value={this.state.user.email} label="Email:" required/>
+                                                        <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, img_url: e.target.value } })} value={this.state.user.img_url} label="Image:" required/>
+                                                        <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, first_name: e.target.value} })} value={this.state.user.first_name} label="First name:" />
+                                                        <Form.Input onChange={(e)=> this.setState({ user: {...this.state.user, last_name: e.target.value} })} value={this.state.user.last_name} label="Last name:" />
+                                                        <Form.TextArea onChange={(e)=> this.setState({ user: {...this.state.user, bio: e.target.value} })} value={this.state.user.bio} label="What would you like for others to know about you?" />
+                                                    </Form>
+                                                </Modal.Description>
                                             </Modal.Content>
                                             <Modal.Actions>
-                                                { this.props.errors.length > 0 ?
-                                                    <ErrorModal open={true} errors={this.props.errors} />
-                                                    :
-                                                    null
+                                                {
+                                                    this.props.errors.length > 0 ?
+                                                        <ErrorModal open={true} errors={this.props.errors} />
+                                                    : null
                                                 }
-                                            <Modal
-                                                raised 
-                                                loading
-                                                trigger={<Button positive onClick={this.handleOpen}>Submit Changes!</Button>}
-                                                open={this.state.modalOpen}
-                                                onClose={this.handleClose}
-                                                basic
-                                                closeIcon
-                                                size='small'
-                                            >
-                                                <Header icon='user' content='Enter your password:' />
-                                                <Modal.Content>
-                                                    <Form loading={this.state.loading}>
-                                                        <Form.Input
-                                                            fluid
-                                                            icon='lock'
-                                                            iconPosition='left'
-                                                            placeholder='Password...'
-                                                            type='password'
-                                                            required
-                                                            onChange={(e) => this.setState({ user: {...this.state.user, password: e.target.value} })}
-                                                        />
-                                                    </Form>
-                                                </Modal.Content>
-                                                <Modal.Actions>
-                                                <Button color='green' onClick={()=> {
-                                                    this.setState({ loading: true })
-                                                    this.submitChanges()
-                                                    }} inverted>
-                                                    <Icon name='smile' /> Confirm!
-                                                </Button>
-                                                </Modal.Actions>
-                                            </Modal>
+                                                
+                                                <Modal
+                                                    raised 
+                                                    loading
+                                                    trigger={<Button positive onClick={this.handleOpen}>Submit Changes!</Button>}
+                                                    open={this.state.modalOpen}
+                                                    onClose={this.handleClose}
+                                                    basic
+                                                    closeIcon
+                                                    size='small'
+                                                >
+                                                    <Header icon='user' content='Enter your password:' />
+                                                    <Modal.Content>
+                                                        <Form loading={this.state.loading}>
+                                                            <Form.Input
+                                                                fluid
+                                                                icon='lock'
+                                                                iconPosition='left'
+                                                                placeholder='Password...'
+                                                                type='password'
+                                                                required
+                                                                onChange={(e) => this.setState({ user: {...this.state.user, password: e.target.value} })}
+                                                            />
+                                                        </Form>
+                                                    </Modal.Content>
+                                                    <Modal.Actions>
+                                                    <Button color='green' onClick={()=> {
+                                                        this.setState({ loading: true })
+                                                        this.submitChanges()
+                                                        }} inverted>
+                                                        <Icon name='smile' /> Confirm!
+                                                    </Button>
+                                                    </Modal.Actions>
+                                                </Modal>
                                             </Modal.Actions>
                                         </Modal>
                                     </Card.Content>
@@ -214,8 +215,8 @@ class Homepage extends Component {
                             <Grid.Column centered width={8} verticalAlign='middle'>
                                 <Segment raised scrollable scrolling verticalAlign='middle'>
                                     <div className="content"><h3>Concoctions you've shared:</h3></div>
-                                        {
-                                            this.props.current_user.cocktails.length > 0 ?
+                                    {
+                                        this.props.current_user.cocktails.length > 0 ?
                                             <div>
                                                 <div className="sub header"><p>&emsp;&emsp;( Click on one to edit it )</p></div>
                                                 <Menu fluid vertical>
@@ -224,32 +225,32 @@ class Homepage extends Component {
                                                     })}
                                                 </Menu>
                                             </div>
-                                            :
+                                        :
                                             <div className="sub-content">( Unlock your inner mad scientist, then get out there and start experimenting! )</div>
-                                        }
-                                        <br></br>
+                                    }
+                                    <br></br>
                                     <div className="content"><h3>Favorites:</h3></div>
-                                        {
-                                            this.props.current_user.likes.length > 0 ?
+                                    {
+                                        this.props.current_user.likes.length > 0 ?
                                             <Menu raised fluid vertical>
                                                 {this.getFavorites().map( cocktail => {
                                                     return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
                                                 })}
                                             </Menu>
-                                            :
+                                        :
                                             <div className="sub-content">( More drinking (responsibly!) needs to be happening! )</div>
-                                        }
-                                        <br></br>
+                                    }
+                                    <br></br>
                                     <div className="content"><h3>Reviewed:</h3></div>
                                     {
                                         this.props.current_user.reviews.length > 0 ?
-                                        <Menu fluid vertical>
-                                            {this.getReviewed().map( cocktail => {
-                                                return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
-                                            })}
-                                        </Menu>
+                                            <Menu fluid vertical>
+                                                {this.getReviewed().map( cocktail => {
+                                                    return <Menu.Item onClick={() => this.getCocktailInfo(cocktail)}><Image floated="left" src={cocktail.imageUrl} avatar />{cocktail.name}</Menu.Item>
+                                                })}
+                                            </Menu>
                                         :
-                                        <div className="sub-content">( More sharing of the thoughts please! )</div>
+                                            <div className="sub-content">( More sharing of the thoughts please! )</div>
                                     }
                                 </Segment>
                             </Grid.Column>
@@ -262,7 +263,7 @@ class Homepage extends Component {
                 </Segment>
             )
         } else {
-            return <Redirect to="/" />
+            return <Redirect to="/home" />
         }
     }
 }

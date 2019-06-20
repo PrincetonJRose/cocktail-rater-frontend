@@ -6,13 +6,15 @@ import { Button, Container, Divider, Grid, Header, Icon, Image, List, Menu, Resp
 class SearchBar extends Component {
     constructor() {
         super()
-        this.state = { }
+        this.state = {
+            
+        }
     }
 
     render() {
         return (
-            <Segment verticalAlign="center">
-                Coming Soon!!!
+            <Segment textAlign="center" verticalAlign="center">
+                <h1>Coming Soon!!!</h1>
             </Segment>
         )
     }

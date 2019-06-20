@@ -188,29 +188,29 @@ class CocktailInfo extends Component {
                     </GridRow>
                     <GridRow stretched centered >
                         <GridColumn width={12}>
-                        <Segment raised className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
-                            <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}/>
-                            <Segment raised raised fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
-                                <Menu raised fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
-                                    <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
-                                    <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
-                                    <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
-                                    <Menu.Item><b><u>Video tutorial</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
-                                    <Menu.Item ><b><u>Likes</u>:</b>{'  ' + c.likes.length}
-                                        { this.props.current_user ?
-                                            <span style={{ justifyContent: `right`, textAlign: `right` }}>
-                                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                                <Button basic circular color="red" onClick={()=> this.toggleLike()} icon={this.checkUserLiked()} />
-                                            </span>
-                                        :
-                                            null
-                                        }
-                                    </Menu.Item>
-                                    <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
-                                    <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
-                                </Menu>
+                            <Segment raised className="container" style={{ borderStyle: `groove`, borderRadius: `12px`, borderColor: `pink`, alignItems: `center` }}>
+                                <Image size="medium" spaced="left" fluid floated="left" src={c.imageUrl ? c.imageUrl : <span>No Image Provided</span>} style={{ borderStyle: `inset`, borderColor: `pink`, borderRadius: `12px`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}/>
+                                <Segment raised raised fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
+                                    <Menu raised fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
+                                        <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
+                                        <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
+                                        <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
+                                        <Menu.Item><b><u>Video tutorial</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
+                                        <Menu.Item ><b><u>Likes</u>:</b>{'  ' + c.likes.length}
+                                            {
+                                                this.props.current_user ?
+                                                    <span style={{ justifyContent: `right`, textAlign: `right` }}>
+                                                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                                                        <Button basic circular color="red" onClick={()=> this.toggleLike()} icon={this.checkUserLiked()} />
+                                                    </span>
+                                                : null
+                                            }
+                                        </Menu.Item>
+                                        <Menu.Item><b><u>Reviews</u>:</b>{'  ' + c.reviews.length}</Menu.Item>
+                                        <Menu.Item><b><u>Avg. Rating</u>:</b>{'  ' + average + ' / 10'}</Menu.Item>
+                                    </Menu>
+                                </Segment>
                             </Segment>
-                        </Segment>
                         </GridColumn>
                     </GridRow>
                     <GridRow centered>
@@ -253,31 +253,39 @@ class CocktailInfo extends Component {
                                             <Reviews c={c}/>
                                         }
                                         <div><br></br></div>
-                                        { this.props.userReview?
-                                            null
+                                        {
+                                            this.props.userReview ?
+                                                null
                                             :
-                                                <Modal dimmer="blurring" size="large" closeIcon onClose={()=> this.toggleModal()}  open={this.state.modalToggle} trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}>
-                                                <Modal.Header>Your review:</Modal.Header>
-                                                <Modal.Content scrolling>
-                                                    <Form size="large">
-                                                        <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
-                                                        <br></br>
-                                                        <div><p></p></div>
-                                                        <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
-                                                    </Form>
-                                                </Modal.Content>
-                                                <Modal.Actions>
-                                                    {
-                                                        this.state.errors.length > 0 ?
-                                                            <ErrorModal open={true} errors={this.state.errors} />
+                                                <Modal
+                                                dimmer="blurring"
+                                                size="large"
+                                                closeIcon
+                                                onClose={()=> this.toggleModal()} 
+                                                open={this.state.modalToggle}
+                                                trigger={<Button primary onClick={()=> this.toggleModal()}>Create Review</Button>}
+                                                >
+                                                    <Modal.Header>Your review:</Modal.Header>
+                                                    <Modal.Content scrolling>
+                                                        <Form size="large">
+                                                            <Form.Select label={<h3><b><u>Rating</u>:</b></h3>} placeholder='Choose rating...' options={ratings} onChange={(e, data) => this.setState({ review: {...this.state.review, rating: data.value} })} required/>
+                                                            <br></br>
+                                                            <div><p></p></div>
+                                                            <Form.TextArea label={<h3><b><u>Share your thoughts</u>!</b></h3>} type="text" fluid transparent name="Content:" placeholder="Enter review here..." onChange={(e)=> this.setState({ review: {...this.state.review, content: e.target.value} })} required/>
+                                                        </Form>
+                                                    </Modal.Content>
+                                                    <Modal.Actions>
+                                                        {
+                                                            this.state.errors.length > 0 ?
+                                                                <ErrorModal open={true} errors={this.state.errors} />
                                                             : null
-                                                    }
-                                                    <Button positive onClick={()=>{
-                                                        this.toggleModal()
-                                                        this.handleCreate()
-                                                        }}>Submit Review!</Button>
-                                                </Modal.Actions>
-                                            </Modal>
+                                                        }
+                                                        <Button positive onClick={()=>{
+                                                            this.toggleModal()
+                                                            this.handleCreate()
+                                                            }}>Submit Review!</Button>
+                                                    </Modal.Actions>
+                                                </Modal>
                                         }
                                     </Segment>
                                 </GridColumn>
