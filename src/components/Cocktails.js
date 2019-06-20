@@ -158,7 +158,7 @@ class Cocktails extends Component {
                     <div id="center-text" style={{ overflowX: `hidden`, overflowY: `auto`, height: `35%` }}>
                         <div><h3><b><u>Custom Drinks</u></b></h3></div>
                         <div className="sub-content">( Cocktails users have submitted )</div>
-                        <div className="container" id="center-text" style={{ width: `70%`, height: `68%`,maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, borderColor: `pink`, display: `flex`, position: `relative`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
+                        <div className="container" id="center-text" style={{ width: `70%`, height: `68%`,maxHeight: `84%`, overflowX: `auto`, overflowY: `auto`, borderStyle: `groove`, textAlign: `center`, borderRadius: `12px`, borderColor: `pink`, marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, justifyContent: `center` }}>
                             <Menu fluid vertical>
                                 {this.filterCustomCocktails().map( cocktail => {
                                     return <Menu.Item onClick={() => {

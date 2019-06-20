@@ -33,7 +33,16 @@ class Reviews extends Component {
 
     handleDelete =()=> {
         deleteReview(this.state.review, this.props.jwt_user).then( data => {
-            this.setCocktail(data)
+            if (data.errors || data.error) {
+                if (data.errors) {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                } else {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
+                }
+            } else {
+                this.setCocktail(data)
+                this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
+            }
         })
     }
     
@@ -47,7 +56,15 @@ class Reviews extends Component {
 
     handleCommentDelete =(comment)=> {
         deleteComment(comment, this.props.jwt_user).then( data => {
-            this.setCocktail(data)
+            if (data.errors || data.error) {
+                if (data.errors) {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                } else {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
+                }
+            } else {
+                this.setCocktail(data)
+            }
         })
     }
 
@@ -63,14 +80,22 @@ class Reviews extends Component {
 
     handleCommentEdit =()=> {
         updateComment(this.state.comment, this.props.jwt_user).then(data => {
-            this.setCocktail(data)
-            this.setState({
-                loading: false,
-                comment: {
-                    content: '',
-                    review_id: null,
-                },
-            })
+            if (data.errors || data.error) {
+                if (data.errors) {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                } else {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: [data.error] })
+                }
+            } else {
+                this.setCocktail(data)
+                this.setState({
+                    loading: false,
+                    comment: {
+                        content: '',
+                        review_id: null,
+                    },
+                })
+            }
             this.handleEditCommentClose()
         })
     }
@@ -141,6 +166,7 @@ class Reviews extends Component {
                                         {
                                             this.props.userReview && review.id === this.props.userReview.id ?
                                                 <Comment.Action textAlign="right" onClick={()=> {
+                                                    this.setState({ review: this.props.userReview })
                                                     this.handleDelete()
                                                 }}>Delete</Comment.Action>
                                             : null

@@ -56,6 +56,7 @@ class CreateCocktail extends Component {
                 },
             })
         }
+        this.setState({ modalCreateOpen: false })
     }
 
     handleEditCocktail =()=> {
@@ -74,9 +75,14 @@ class CreateCocktail extends Component {
     
     handleCreateCocktail =()=> {
         createCocktail(this.state.cocktail, this.props.jwt_user).then( data => {
-            if (data.errors) {
-                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
-                this.setState({ loading: false })
+            if (data.errors || data.error) {
+                if (data.errors) {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+                    this.setState({ loading: false })
+                } else {
+                    this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
+                    this.setState({ loading: false })
+                }
             } else {
                 this.props.dispatch({ type: "SET_COCKTAILS", cocktailData: data })
                 this.setState({ loading: false, modalCreateOpen: false })
