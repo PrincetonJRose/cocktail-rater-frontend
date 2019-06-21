@@ -34,11 +34,7 @@ class Reviews extends Component {
     handleDelete =()=> {
         deleteReview(this.state.review, this.props.jwt_user).then( data => {
             if (data.errors || data.error) {
-                if (data.errors) {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
-                } else {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
-                }
+                this.handleErrors(data)
             } else {
                 this.setCocktail(data)
                 this.props.dispatch({ type: "SET_USER_REVIEW", userReview: null })
@@ -48,20 +44,20 @@ class Reviews extends Component {
     
     handleUpdate =()=> {
         updateReview(this.state.review, this.props.jwt_user).then(data => {
-            this.setCocktail(data)
-            this.setState({ loading: false, })
-            this.handleReviewEditClose()
+            if (data.errors || data.error) {
+                this.handleErrors(data)
+            } else {
+                this.setCocktail(data)
+                this.setState({ loading: false, })
+                this.handleReviewEditClose()
+            }
         })
     }
 
     handleCommentDelete =(comment)=> {
         deleteComment(comment, this.props.jwt_user).then( data => {
             if (data.errors || data.error) {
-                if (data.errors) {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
-                } else {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
-                }
+                this.handleErrors(data)
             } else {
                 this.setCocktail(data)
             }
@@ -72,20 +68,20 @@ class Reviews extends Component {
         let comment = this.state.comment
         comment.review_id = this.state.commentOnReview.id
         createComment(comment, this.props.jwt_user).then(data => {
-            this.setCocktail(data)
-            this.setState({ loading: false })
-            this.handleNewCommentClose()
+            if (data.errors || data.error) {
+                this.handleErrors(data)
+            } else {
+                this.setCocktail(data)
+                this.setState({ loading: false })
+                this.handleNewCommentClose()
+            }
         })
     }
 
     handleCommentEdit =()=> {
         updateComment(this.state.comment, this.props.jwt_user).then(data => {
             if (data.errors || data.error) {
-                if (data.errors) {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
-                } else {
-                    this.props.dispatch({ type: "SET_ERRORS", errors: [data.error] })
-                }
+                this.handleErrors(data)
             } else {
                 this.setCocktail(data)
                 this.setState({
@@ -103,13 +99,17 @@ class Reviews extends Component {
 
     setCocktail =(data)=> {
         if (data.errors || data.error) {
-            if (data.errors) {
-                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
-            } else {
-                this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
-            }
+            this.handleErrors(data)
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
+        }
+    }
+
+    handleErrors =(data)=> {
+        if (data.errors) {
+            this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
+        } else {
+            this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
         }
     }
 

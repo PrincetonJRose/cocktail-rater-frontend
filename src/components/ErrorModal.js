@@ -18,7 +18,8 @@ class ErrorModal extends Component {
     }
 
     render() {
-        if (this.props.errors) {                
+        if (this.props.errors) {
+            console.log(this.props.errors)
             return (
                 <Modal
                     raised
@@ -28,9 +29,16 @@ class ErrorModal extends Component {
                 >
                     <Header icon='exclamation triangle' content='There were some errors:' />
                     <Modal.Content>
-                        {this.props.errors.map( error => {
-                            return <Message error content={error} />
-                        })}
+                        {
+                            this.props.errors === "Not Found" ?
+                                <Message error content="Sorry, that content could not be found." />
+                            :
+                                <div>
+                                    {this.props.errors.map( error => {
+                                        return <Message error content={error} />
+                                    })}
+                                </div>
+                        }
                     </Modal.Content>
                     <Modal.Actions>
                     </Modal.Actions>
