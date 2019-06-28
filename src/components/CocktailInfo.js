@@ -274,7 +274,7 @@ class CocktailInfo extends Component {
                                                     </Modal.Content>
                                                     <Modal.Actions>
                                                         {
-                                                            this.state.errors.length > 0 ?
+                                                            this.props.errors.length > 0 ?
                                                                 <ErrorModal open={true} errors={this.state.errors} />
                                                             : null
                                                         }
@@ -312,6 +312,7 @@ let mapStateToProps =(state)=> {
         ingredients: state.ingredients.ingredients,
         userLike: state.cocktails.userLike,
         current_user: state.users.current_user,
+        errors: state.users.errors,
     }
 }
 
