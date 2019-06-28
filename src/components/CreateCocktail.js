@@ -39,9 +39,6 @@ class CreateCocktail extends Component {
         if (this.props.editCocktail) {
             this.props.dispatch({ type: "SET_EDIT_COCKTAIL", cocktailData: null })
             this.setState({
-                modalCreateOpen: false,
-                filter: '',
-                loading: false,
                 cocktail: {
                     name: '',
                     alcoholic: '',
@@ -54,6 +51,9 @@ class CreateCocktail extends Component {
                     measurements: [],
                     cocktail_ingredients: [],
                 },
+                modalCreateOpen: false,
+                filter: '',
+                loading: false,
             })
         }
         this.setState({ modalCreateOpen: false })

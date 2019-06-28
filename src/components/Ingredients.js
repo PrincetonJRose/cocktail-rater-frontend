@@ -9,7 +9,9 @@ import CocktailInfo from './CocktailInfo'
 class Ingredients extends Component {
     constructor() {
         super()
-        this.state = { filter: '', }
+        this.state = {
+            filter: '',
+        }
     }
 
     componentDidMount() {

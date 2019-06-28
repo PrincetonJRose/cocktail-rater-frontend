@@ -13,7 +13,6 @@ class CocktailInfo extends Component {
         this.state = {
             modalToggle: false,
             review: {},
-            errors: [],
         }
     }
 
@@ -47,9 +46,9 @@ class CocktailInfo extends Component {
     setCocktail =(data)=> {
         if (data.errors || data.error) {
             if (data.errors) {
-                this.setState({ errors: data.errors })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.errors })
             } else {
-                this.setState({ errors: data.error })
+                this.props.dispatch({ type: "SET_ERRORS", errors: data.error })
             }
         } else {
             this.props.dispatch({ type: "SET_COCKTAIL", cocktailData: data })
@@ -167,9 +166,8 @@ class CocktailInfo extends Component {
         
         const c = this.props.cocktail
         let ingredients = this.listIngredients(c)
-        
         let average = this.getAverageRating(c)
-        const ratings = [1,2,3,4,5,6,7,8,9,10].map(number => ({
+        const ratings = [1,2,3,4,5,6,7,8,9,10].map( number => ({
             key: number,
             text: number,
             value: number,
