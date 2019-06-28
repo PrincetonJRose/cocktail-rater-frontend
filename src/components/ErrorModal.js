@@ -5,7 +5,9 @@ import { connect } from 'react-redux'
 class ErrorModal extends Component {
     constructor() {
         super()
-        this.state = { modalErrorOpen: false }
+        this.state = {
+            modalErrorOpen: false,
+        }
     }
     
     componentWillReceiveProps() {
@@ -34,9 +36,11 @@ class ErrorModal extends Component {
                                 <Message error content="Sorry, that content could not be found." />
                             :
                                 <div>
-                                    {this.props.errors.map( error => {
-                                        return <Message error content={error} />
-                                    })}
+                                    {
+                                        this.props.errors.map( error => {
+                                            return <Message error content={error} />
+                                        })
+                                    }
                                 </div>
                         }
                     </Modal.Content>
