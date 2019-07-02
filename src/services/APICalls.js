@@ -1,13 +1,13 @@
 import jwt_decode from 'jwt-decode'
-const localUrl = `http://localhost:3000/`
-const cocktailsUrl = `http://localhost:3000/cocktails/`
-const ingredientsUrl = `http://localhost:3000/ingredients/`
-const apiCocktailsUrl = `http://localhost:3000/api_cocktail_infos/`
-const usersUrl = `http://localhost:3000/users/`
-const reviewsUrl = `http://localhost:3000/reviews/`
-const likesUrl = `http://localhost:3000/likes/`
-const loginUrl = `http://localhost:3000/login/`
-const commentsUrl = `http://localhost:3000/comments/`
+const localUrl = `https://cocktail-rater-api.herokuapp.com/`
+const cocktailsUrl = `https://cocktail-rater-api.herokuapp.com/cocktails/`
+const ingredientsUrl = `https://cocktail-rater-api.herokuapp.com/ingredients/`
+const apiCocktailsUrl = `https://cocktail-rater-api.herokuapp.com/api_cocktail_infos/`
+const usersUrl = `https://cocktail-rater-api.herokuapp.com/users/`
+const reviewsUrl = `https://cocktail-rater-api.herokuapp.com/reviews/`
+const likesUrl = `https://cocktail-rater-api.herokuapp.com/likes/`
+const loginUrl = `https://cocktail-rater-api.herokuapp.com/login/`
+const commentsUrl = `https://cocktail-rater-api.herokuapp.com/comments/`
 
 export function getApiCocktails() {
     return fetch(apiCocktailsUrl)
