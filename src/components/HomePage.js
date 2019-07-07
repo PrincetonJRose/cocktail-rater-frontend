@@ -7,7 +7,7 @@ class HomePage extends Component {
 
     render() {
         return (
-            <Segment floated="left" style={{ padding: '12em 14em' }} vertical>
+            <Segment floated="left" style={{ padding: '10em 7em' }} vertical>
                 <Grid raised container stackable verticalAlign='middle'>
                     <Grid.Row >
                         <Grid.Column width={8}>
