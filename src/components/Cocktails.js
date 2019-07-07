@@ -140,7 +140,7 @@ class Cocktails extends Component {
                         </div>
                     }
                 </div>
-                <div className="container" style={{ width: `35%`, height: `100%`, float: `left` }}>
+                <div className="container" style={{ width: `35%`, height: `100%`, float: `left`, overflowY: `auto` }}>
                     <div className="container" id="center-text" style={{ width: `100%`, height: `65%` }}>
                         <p></p>
                         <div><h3><b><u>Cocktails</u></b></h3></div>
