@@ -1,7 +1,7 @@
 import React, { Component } from  'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Container, Divider, Grid, Header, Icon, Image, List, Menu, Responsive, Segment, Sidebar, Visibility, Input, Search, } from 'semantic-ui-react'
+import { Button, Container, Divider, Grid, Header, Icon, Image, List, Menu, Responsive, Segment, Sidebar, Visibility, Input, Search, GridColumn, } from 'semantic-ui-react'
 
 class SearchBar extends Component {
     constructor() {
@@ -14,7 +14,14 @@ class SearchBar extends Component {
     render() {
         return (
             <Segment textAlign="center" verticalAlign="center">
-                <h1>Coming Soon!!!</h1>
+                <Grid>
+                    <GridColumn width={6}>
+                    <h1>Coming Soon!!!</h1>
+                    </GridColumn>
+                    <GridColumn width={10}>
+                        <h1>Hiya!!!!</h1>
+                    </GridColumn>
+                </Grid>
             </Segment>
         )
     }
