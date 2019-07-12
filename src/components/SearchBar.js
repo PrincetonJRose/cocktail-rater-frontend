@@ -7,7 +7,9 @@ class SearchBar extends Component {
     constructor() {
         super()
         this.state = {
-            
+            filter: '',
+            ingredients: [],
+
         }
     }
 
@@ -16,7 +18,21 @@ class SearchBar extends Component {
             <Segment textAlign="center" verticalAlign="center">
                 <Grid>
                     <GridColumn width={6}>
-                    <h1>Coming Soon!!!</h1>
+                        <h1>Coming Soon!!!</h1>
+                        <div>
+                        <Dropdown 
+                                placeholder='Choose flavors...'
+                                raised 
+                                fluid 
+                                search // to allow filtered search... still not working 100%    search={()=>this.filterIngredients()}
+                                onSearchChange={(e)=>this.setState({ filter: e.target.value }) }
+                                multiple
+                                selection
+                                value={this.state.ingredients}
+                                options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) }
+                                onChange={(e, data)=>{this.setState({ ingredients: data.value} )} }
+                            />
+                        </div>
                     </GridColumn>
                     <GridColumn width={10}>
                         <h1>Hiya!!!!</h1>
