@@ -21,7 +21,7 @@ class SearchBar extends Component {
                         <h1>Coming Soon!!!</h1>
                         <div>
                         <Dropdown 
-                                placeholder='Choose flavors...'
+                                placeholder='Choose ingredients:'
                                 raised 
                                 fluid 
                                 search // to allow filtered search... still not working 100%    search={()=>this.filterIngredients()}
@@ -29,7 +29,7 @@ class SearchBar extends Component {
                                 multiple
                                 selection
                                 value={this.state.ingredients}
-                                options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) }
+                                options={this.props.allIngredients.map( i => ({ key: i.name, text: i.name, value: i }) ) }
                                 onChange={(e, data)=>{this.setState({ ingredients: data.value} )} }
                             />
                         </div>
@@ -45,7 +45,9 @@ class SearchBar extends Component {
 
 let mapStateToProps =(state)=> {
     return {
-
+        allIngredients: state.ingredients.ingredients,
+        allApiCocktails: state.cocktails.api_cocktails,
+        allCustomCocktails: state.cocktails.custom_cocktails,
     }
 }
 
