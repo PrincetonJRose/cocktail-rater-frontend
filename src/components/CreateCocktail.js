@@ -90,17 +90,17 @@ class CreateCocktail extends Component {
         })
     }
     
-    filterIngredients =()=> {
-        if (this.state.filter !== '') {
-            let search = this.props.ingredients.filter(ingredient => {
-                if (ingredient.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (ingredient.category && ingredient.category.toLowerCase().includes(this.state.filter.toLowerCase())))
-                return true
-            })
-            return search
-        } else {
-            return this.props.ingredients
-        }
-    }
+    // filterIngredients =()=> {
+    //     if (this.state.filter !== '') {
+    //         let search = this.props.ingredients.filter(ingredient => {
+    //             if (ingredient.name.toLowerCase().includes(this.state.filter.toLowerCase()) || (ingredient.category && ingredient.category.toLowerCase().includes(this.state.filter.toLowerCase())))
+    //             return true
+    //         })
+    //         return search
+    //     } else {
+    //         return this.props.ingredients
+    //     }
+    // }
 
     render() {
         
@@ -203,7 +203,7 @@ class CreateCocktail extends Component {
                                 multiple
                                 selection
                                 value={this.state.cocktail.ingredients}
-                                options={this.filterIngredients().map( i => ({ key: i.name, text: i.name, value: i }) ) }
+                                options={this.props.ingredients.map( i => ({ key: i.name, text: i.name, value: i }) ) }
                                 onChange={(e, data)=>{this.setState({ cocktail: {...this.state.cocktail, ingredients: data.value} })} }
                                 required
                             />
