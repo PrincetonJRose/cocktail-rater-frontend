@@ -16,9 +16,9 @@ class SearchBar extends Component {
     render() {
         return (
             <Segment textAlign="center" verticalAlign="center">
+                <h1>Coming Soon!!!</h1>
                 <Grid>
                     <GridColumn width={6}>
-                        <h1>Coming Soon!!!</h1>
                         <div>
                         <Dropdown 
                                 placeholder='Choose ingredients:'
