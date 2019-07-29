@@ -191,9 +191,9 @@ class CocktailInfo extends Component {
                                 <Segment raised raised fluid style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto`, display: `flex`, justifyContent: `center` }}>
                                     <Menu raised fluid vertical style={{ marginLeft: `auto`, marginRight: `auto`, marginBottom: `auto`, marginTop: `auto` }}>
                                         <Menu.Item ><b><u>Category</u>:</b> {'  ' + c.category}</Menu.Item>
-                                        <Menu.Item><b><u>Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
+                                        <Menu.Item><b><u>Is Alcoholic</u>?</b> {'  ' + c.alcoholic}</Menu.Item>
                                         <Menu.Item><b><u>Glass</u>:</b>{'  ' + c.glass}</Menu.Item>
-                                        <Menu.Item><b><u>Video tutorial</u>?</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
+                                        <Menu.Item><b><u>Video tutorial</u>:</b>{c.videoUrl ? c.videoUrl : <span>{'  '}No video provided.</span>}</Menu.Item>
                                         <Menu.Item ><b><u>Likes</u>:</b>{'  ' + c.likes.length}
                                             {
                                                 this.props.current_user ?
